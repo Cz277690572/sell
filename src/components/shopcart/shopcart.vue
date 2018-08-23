@@ -213,10 +213,11 @@
           border-radius: 50%
           background: #141d27
           .logo
-            width: 100%
-            height: 100%
+            width: 46px
+            height: 46px
             border-radius: 50%
             text-align: center
+            margin: 5px auto 5px auto
             background: #2b343c
             &.highlight
               background: rgb(0, 160, 220)

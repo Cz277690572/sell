@@ -71,7 +71,8 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  @import "../../common/stylus/mixin";
+  @import "../../common/stylus/mixin"
+  @import "../../common/stylus/icon"
   .header
     position: relative
     color: #fff
@@ -114,6 +115,7 @@
             font-size: 12px
 
     .bulletin-wrapper
+      position: relative
       height: 28px
       line-height: 28px
       padding: 0 22px 0 12px
@@ -170,7 +172,7 @@
       .detail-wrapper
         min-height: 100%
         .detail-main
-          margin-top: 64px
+          padding-top: 64px
           padding-bottom: 64px
           .name
             line-height: 16px

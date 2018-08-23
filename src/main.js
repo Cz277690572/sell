@@ -8,7 +8,7 @@ import goods from './components/goods/goods'
 import orders from './components/orders/orders'
 import seller from './components/seller/seller'
 
-// import './components/common/stylus/index.styl'
+// import './common/stylus/index.styl'
 // import router from './router'
 
 import VueRouter from 'vue-router' // 引入路由组件
