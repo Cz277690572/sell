@@ -25,7 +25,8 @@
     <div class="background">
       <img :src="seller.avatar" width="100%" height="100%"/>
     </div>
-    <div v-show="detailShow" class="detail fade-transition">
+    <transition name="fade">
+      <div v-show="detailShow" class="detail">
       <div class="detail-wrapper">
         <div class="detail-main">
           <h1 class="name">{{seller.name}}</h1>
@@ -43,6 +44,7 @@
         <i class="icon-close"></i>
       </div>
     </div>
+    </transition>
   </div>
 </template>
 
@@ -153,6 +155,7 @@
       z-index: -1
       filter: blur(10px)
     .detail
+      opacity: 1
       position: fixed
       z-index: 100
       top: 0
@@ -160,13 +163,11 @@
       width: 100%
       height: 100%
       overflow: auto
-      transition: all 0.5s
       backdrop-filter: blur(10px)
-      //background: rgba(7, 17, 27, 0.8)
-      &.fade-transition
-        opacity: 1
-        background: rgba(7, 17, 27, 0.8)
-      &.fade-enter, &.fade-leave
+      background: rgba(7, 17, 27, 0.8)
+      &.fade-enter-active, &.fade-leave-active
+        transition: all 0.5s
+      &.fade-enter, &.fade-leave-to
         opacity: 0
         background: rgba(7, 17, 27, 0)
       .detail-wrapper

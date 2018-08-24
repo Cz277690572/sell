@@ -30,7 +30,7 @@
                                                                 v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food"></cartcontrol>
+                  <cartcontrol :food="food" v-on:cart-add="cartAdd"></cartcontrol>
                 </div>
               </div>
             </li>
@@ -78,13 +78,7 @@
         return 0
       },
       selectFoods () {
-        let foods = [
-          {
-            name: '小葱拌豆腐',
-            price: 30,
-            count: 2
-          }
-        ]
+        let foods = []
         this.goods.forEach((good) => {
           good.foods.forEach((food) => {
             if (food.count) {
@@ -117,7 +111,7 @@
         let el = foodList[index]
         this.foodsScroll.scrollToElement(el, 300)
       },
-      _drop(target) {
+      cartAdd(target) {
         // 体验优化，异步执行小球下落动画
         this.$nextTick(() => {
           this.$refs.shopcart.drop(target)
@@ -146,11 +140,6 @@
           height += item.clientHeight
           this.listHeight.push(height)
         }
-      }
-    },
-    events: {
-      'cart.add'(target) {
-        this._drop(target)
       }
     }
   }
@@ -240,7 +229,6 @@
               text-decoration: line-through
               font-size: 10px
               color: rgb(147, 153, 159)
-
           .cartcontrol-wrapper
             position: absolute
             right: 0
