@@ -22,6 +22,7 @@
     created() {
     },
     methods: {
+      // 将购车的商品加入缓存，初始化时判断缓存中是否存在商品id，有取出加入this.food.count;无略过
       addCart(event) {
         if (!event._constructed) {
           return
@@ -49,7 +50,7 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   .cartcontrol
-    font-size: 0
+    font-size: 0px
     .cart-decrease // .move 与 .cart-decrease 是 同级关系
       display: inline-block
       padding: 6px
