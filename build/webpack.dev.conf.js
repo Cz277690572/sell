@@ -19,6 +19,7 @@ const app = express()  // 请求server
 var appData = require('../data.json') // 加载本地数据文件
 var seller = appData.seller  // 获取对应的本地数据
 var goods = appData.goods
+var orders = appData.orders
 var ratings = appData.ratings
 var apiRoutes = express.Router()
 app.use('/api', apiRoutes) // 通过路由请求数据
@@ -64,6 +65,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         res.json({
           errno: 0,
           data: goods
+        })
+      }),
+      app.get('/api/orders', (req, res) => {
+        res.json({
+          errno: 0,
+          data: orders
         })
       }),
       app.get('/api/ratings', (req, res) => {

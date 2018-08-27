@@ -91,6 +91,7 @@
         } else {
           this.scroll.refresh()
         }
+        console.log(this.scroll)
       },
       _initPics() {
         if (this.seller.pics) {
@@ -150,7 +151,7 @@
             font-size: 10px
             color: rgb(7, 17, 27)
             .stress
-              font-size: 24px
+              font-size: 14px
     .bulletin
       padding: 18px 18px 0 18px
       .title

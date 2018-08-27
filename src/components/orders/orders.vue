@@ -1,13 +1,136 @@
 <template>
-  <div>
-    I am orders
+  <div class="order" ref="order">
+    <div class="order-wrapper">
+      <div class="order-item" v-for="(item, index) in orders" :key="index">
+        <div class="order-header">
+          <span>订单编号:</span><span class="order-no">{{item.order_no}}</span>
+        </div>
+        <div class="order-main">
+          <div class="order-left">
+            <img width="57px" height="57px"
+                 src="http://fuss10.elemecdn.com/8/71/c5cf5715740998d5040dda6e66abfjpeg.jpeg?imageView2/1/w/180/h/180">
+          </div>
+          <div class="order-middle">
+            <div class="order-desc">{{item.desc}}</div>
+            <div class="order-count">{{item.count}}件商品</div>
+          </div>
+          <div class="order-right">
+            <span v-show="item.status == '待付款'" class="order-status unpay">{{item.status}}</span>
+            <span v-show="item.status == '已付款'"  class="order-status payed">等待商家发货</span>
+            <span v-show="item.status == '已发货'" class="order-status done">已发货</span>
+          </div>
+        </div>
+        <div class="order-bottom">
+          <div class="desc">实付￥{{item.pay}}元</div>
+          <div class="pay" v-show="item.status == '待付款'">付款</div>
+          <div class="confirm" v-show="item.status == '已发货'">确认收货</div>
+        </div>
+        <div class="split"></div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-  export default {}
+  import BScroll from 'better-scroll'
+
+  const ERR_OK = 0
+  export default {
+    data() {
+      return {
+        orders: []
+      }
+    },
+    created() {
+      this.$http.get('/api/orders').then((response) => {
+        response = response.body
+        if (response.errno === ERR_OK) {
+          this.orders = response.data
+          this.$nextTick(() => {
+            this._initScroll()
+          })
+        }
+      })
+    },
+    methods: {
+      _initScroll() {
+        this.scroll = new BScroll(this.$refs.order, {
+          click: true
+        })
+      }
+    }
+  }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-
+  @import "../../common/stylus/mixin.styl"
+  .order
+    position: absolute
+    top: 174px
+    left: 0
+    bottom: 0
+    width: 100%
+    overflow: hidden
+    .order-item
+      .order-header
+        padding: 18px 18px 5px 18px
+        line-height: 14px
+        color: rgb(147, 153, 159)
+        font-size: 14px
+        .order-no
+          margin-left: 8px
+      .order-main
+        display: flex
+        padding: 5px 0
+        margin: 0 18px
+        border-top: 1px solid #EDEDED
+        border-bottom: 1px solid #EDEDED
+        .order-left
+          display: inline-block
+          vertical-align: top
+          img
+            flex: 0 0 57px
+            margin-right: 10px
+        .order-middle
+          flex: 1
+          .order-desc, .order-count
+            margin: 10px 0
+            color: rgb(147, 153, 159)
+            font-size: 10px
+        .order-right
+          flex: 1
+          margin: 19px 0
+          text-align: right
+          .order-status
+            font-size: 10px
+          .unpay
+            color: #B42F2D
+          .payed
+            color: #DDB477
+          .done
+            color: #57AB53
+      .order-bottom
+        display: flex
+        padding-top: 5px
+        margin: 0 18px 9px 18px
+        .desc
+          flex: 1
+          line-height: 28px
+          font-size: 14px
+          color: rgb(7, 17, 27)
+        .pay, .confirm
+          flex: 0 0 70px
+          height: 28px
+          line-height: 28px
+          color: #fff
+          font-size: 14px
+          background-color: #B42F2D
+          border-radius: 4px
+          text-align: center
+        .confirm
+          background-color: #00b43c
+      .split
+        width: 100%
+        height: 8px
+        background: #f3f5f7
 </style>

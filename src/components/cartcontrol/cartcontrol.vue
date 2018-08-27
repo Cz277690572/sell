@@ -12,6 +12,7 @@
 
 <script>
   import Vue from 'vue'
+  import {saveToLocal, loadFromLocal} from '../../common/js/cart'
 
   export default {
     props: {
@@ -20,6 +21,8 @@
       }
     },
     created() {
+      let count = loadFromLocal(this.food.id, 'count', 0)
+      Vue.set(this.food, 'count', count)
     },
     methods: {
       // 将购车的商品加入缓存，初始化时判断缓存中是否存在商品id，有取出加入this.food.count;无略过
@@ -28,10 +31,11 @@
           return
         }
         if (!this.food.count) {
-          Vue.set(this.food, 'count', 1)
+          this.food.count = 1
         } else {
           this.food.count++
         }
+        saveToLocal(this.food.id, 'count', this.food.count)
         this.$emit('cart-add', event.target)
       },
       decreaseCart(event) {
@@ -43,6 +47,7 @@
         } else {
           this.food.count = 0
         }
+        saveToLocal(this.food.id, 'count', this.food.count)
       }
     }
   }
