@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import VueResource from 'vue-resource'
 
+import shop from './components/shop/shop'
 import goods from './components/goods/goods'
 import orders from './components/orders/orders'
 import seller from './components/seller/seller'
@@ -19,10 +20,12 @@ Vue.use(VueResource)
 Vue.config.productionTip = false
 
 const routes = [
+  {path: '/shops', component: App},
+  {path: '/shop', component: shop},
   {path: '/goods', component: goods},
   {path: '/orders', component: orders},
   {path: '/seller', component: seller},
-  {path: '/', redirect: '/goods'}
+  {path: '/', redirect: '/shops'}
 ]
 const router = new VueRouter({
   routes: routes,

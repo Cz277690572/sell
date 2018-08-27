@@ -66,7 +66,6 @@
       split
     },
     created() {
-        console.log(this.seller)
     },
     watch: {
       'seller'() {
@@ -91,7 +90,6 @@
         } else {
           this.scroll.refresh()
         }
-        console.log(this.scroll)
       },
       _initPics() {
         if (this.seller.pics) {

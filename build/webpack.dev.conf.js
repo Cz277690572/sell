@@ -17,6 +17,7 @@ const PORT = process.env.PORT && Number(process.env.PORT)
 const express = require('express')
 const app = express()  // 请求server
 var appData = require('../data.json') // 加载本地数据文件
+var shops = appData.shops
 var seller = appData.seller  // 获取对应的本地数据
 var goods = appData.goods
 var orders = appData.orders
@@ -71,6 +72,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         res.json({
           errno: 0,
           data: orders
+        })
+      }),
+      app.get('/api/shops', (req, res) => {
+        res.json({
+          errno: 0,
+          data: shops
         })
       }),
       app.get('/api/ratings', (req, res) => {
