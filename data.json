@@ -1458,7 +1458,7 @@
       "id": 1,
       "name": "粥品香坊（回龙观）",
       "avatar": "http://static.galileo.xiaojukeji.com/static/tms/seller_avatar_256px.jpg",
-      "status": "营业中",
+      "status": "休息中",
       "desc": "营业时间10:00-14:00 | 16:30-23:50",
       "minPrice": 9.99
     },
@@ -1474,7 +1474,7 @@
       "id": 3,
       "name": "粥品香坊（回龙观）",
       "avatar": "http://static.galileo.xiaojukeji.com/static/tms/seller_avatar_256px.jpg",
-      "status": "营业中",
+      "status": "休息中",
       "desc": "营业时间10:00-14:00 | 16:30-23:50",
       "minPrice": 9.99
     },
@@ -1496,6 +1496,30 @@
     },
     {
       "id": 6,
+      "name": "粥品香坊（回龙观）",
+      "avatar": "http://static.galileo.xiaojukeji.com/static/tms/seller_avatar_256px.jpg",
+      "status": "营业中",
+      "desc": "营业时间10:00-14:00 | 16:30-23:50",
+      "minPrice": 9.99
+    },
+    {
+      "id": 7,
+      "name": "粥品香坊（回龙观）",
+      "avatar": "http://static.galileo.xiaojukeji.com/static/tms/seller_avatar_256px.jpg",
+      "status": "营业中",
+      "desc": "营业时间10:00-14:00 | 16:30-23:50",
+      "minPrice": 9.99
+    },
+    {
+      "id": 8,
+      "name": "粥品香坊（回龙观）",
+      "avatar": "http://static.galileo.xiaojukeji.com/static/tms/seller_avatar_256px.jpg",
+      "status": "营业中",
+      "desc": "营业时间10:00-14:00 | 16:30-23:50",
+      "minPrice": 9.99
+    },
+    {
+      "id": 9,
       "name": "粥品香坊（回龙观）",
       "avatar": "http://static.galileo.xiaojukeji.com/static/tms/seller_avatar_256px.jpg",
       "status": "营业中",

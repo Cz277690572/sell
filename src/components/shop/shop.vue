@@ -1,5 +1,5 @@
 <template>
-  <div id="shop">
+  <div class="shop">
     <v-header :seller="seller"></v-header>
     <div class="tab border-1px">
       <div class="tab-item">
@@ -44,7 +44,7 @@
 <style lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/index.styl"
 
-  #shop
+  .shop
     .tab
       display: flex
       width: 100%
