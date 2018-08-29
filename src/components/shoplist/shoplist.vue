@@ -1,18 +1,20 @@
 <template>
-  <div class="shoplist">
-    <div class="title">请选择商家</div>
-    <div class="shops" ref="shops">
-      <div class="shops-wrapper">
-        <div class="shop-item" v-for="(item, index) in shops" :key="index" @click="toShop">
-          <div class="shop-left">
-            <img width="64px" height="64px" :src="item.avatar">
-          </div>
-          <div class="shop-right">
-            <div class="shop-name">{{item.name}}</div>
-            <div class="shop-status">状态: <span class="close" :class="{on:item.status=='营业中'}">{{item.status}}</span>
+  <div>
+    <div class="shoplist">
+      <div class="title">请选择商家</div>
+      <div class="shops" ref="shops">
+        <div class="shops-wrapper">
+          <div class="shop-item" v-for="(item, index) in shops" :key="index" @click="selectShop(item,$event)">
+            <div class="shop-left">
+              <img width="64px" height="64px" :src="item.avatar">
             </div>
-            <div class="shop-desc">说明: {{item.desc}}</div>
-            <div class="shop-minPrice">起送价{{item.minPrice}}元 <span class="modifier">|</span> 免配送费</div>
+            <div class="shop-right">
+              <div class="shop-name">{{item.name}}</div>
+              <div class="shop-status">状态: <span class="close" :class="{on:item.status=='营业中'}">{{item.status}}</span>
+              </div>
+              <div class="shop-desc">说明: {{item.desc}}</div>
+              <div class="shop-minPrice">起送价{{item.minPrice}}元 <span class="modifier">|</span> 免配送费</div>
+            </div>
           </div>
         </div>
       </div>
@@ -26,7 +28,8 @@
   export default {
     data() {
       return {
-        shops: {}
+        shops: {},
+        selectedShop: {}
       }
     },
     watch: {
@@ -55,8 +58,11 @@
           this.scroll.refresh()
         }
       },
-      toShop() {
-        this.$router.push({name: 'shop'})
+      selectShop(shop, event) {
+        if (!event._constructed) {
+          return
+        }
+        console.log(shop)
       }
     }
   }
@@ -68,11 +74,9 @@
     .title
       padding-left: 9px
       line-height: 46px
-      /*color: rgb(0, 160, 220)*/
       color: #fff
       font-size: 16px
       background: rgba(0, 160, 220, 0.8)
-      /*border-1px(rgba(1, 17, 27, 0.1))*/
     .shops
       position: absolute
       width: 100%

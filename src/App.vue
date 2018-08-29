@@ -6,7 +6,6 @@
 
 <script>
   import orderdetail from './components/orderdetail/orderdetail'
-  // import shoplist from './components/shoplist/shoplist'
   export default {
     data() {
       return {}

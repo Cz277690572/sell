@@ -1,22 +1,77 @@
 <template>
-  <div class="order-detail">
-    <div class="title">订单详情</div>
+  <div v-show="showFlag" class="order-detail">
+    <div class="title">
+      <i class="icon-arrow_lift"></i>订单详情
+    </div>
     <div class="receipt-info">
       <div class="contacts">
-        <span>联系人:</span>
-        <span>二狗</span>
+        <input name="username" placeholder="联系人" v-model="receipt.username" ref="username"/>
       </div>
       <div class="phone">
-        <span>联系电话:</span>
-        <span>18645765422</span>
+        <input name="phone" placeholder="联系手机号" v-model="receipt.phone" ref="phone"/>
       </div>
       <div class="address">
-        <span>收货地址(宿舍号):</span>
-        <span>4栋232</span>
+        <input name="address" placeholder="收货地址" v-model="receipt.address" ref="address"/>
       </div>
     </div>
-    <div class="goods-wrapper">
-      <div class="item">
+    <div class="goods" ref="goods">
+      <div class="goodsWrapper">
+        <div class="item">
+          <div class="item-left">
+            <img height="64px" width="64px"
+                 src="http://fuss10.elemecdn.com/6/72/cb844f0bb60c502c6d5c05e0bddf5jpeg.jpeg?imageView2/1/w/114/h/114">
+          </div>
+          <div class="item-middle">
+            <div class="good-name">gname</div>
+            <div class="good-price">gprice</div>
+          </div>
+          <div class="item-right">x1</div>
+        </div>
+        <div class="item">
+          <div class="item-left">
+            <img height="64px" width="64px"
+                 src="http://fuss10.elemecdn.com/6/72/cb844f0bb60c502c6d5c05e0bddf5jpeg.jpeg?imageView2/1/w/114/h/114">
+          </div>
+          <div class="item-middle">
+            <div class="good-name">gname</div>
+            <div class="good-price">gprice</div>
+          </div>
+          <div class="item-right">x1</div>
+        </div>
+        <div class="item">
+          <div class="item-left">
+            <img height="64px" width="64px"
+                 src="http://fuss10.elemecdn.com/6/72/cb844f0bb60c502c6d5c05e0bddf5jpeg.jpeg?imageView2/1/w/114/h/114">
+          </div>
+          <div class="item-middle">
+            <div class="good-name">gname</div>
+            <div class="good-price">gprice</div>
+          </div>
+          <div class="item-right">x1</div>
+        </div>
+        <div class="item">
+          <div class="item-left">
+            <img height="64px" width="64px"
+                 src="http://fuss10.elemecdn.com/6/72/cb844f0bb60c502c6d5c05e0bddf5jpeg.jpeg?imageView2/1/w/114/h/114">
+          </div>
+          <div class="item-middle">
+            <div class="good-name">gname</div>
+            <div class="good-price">gprice</div>
+          </div>
+          <div class="item-right">x1</div>
+        </div>
+        <div class="item">
+          <div class="item-left">
+            <img height="64px" width="64px"
+                 src="http://fuss10.elemecdn.com/6/72/cb844f0bb60c502c6d5c05e0bddf5jpeg.jpeg?imageView2/1/w/114/h/114">
+          </div>
+          <div class="item-middle">
+            <div class="good-name">gname</div>
+            <div class="good-price">gprice</div>
+          </div>
+          <div class="item-right">x1</div>
+        </div>
+        <div class="item">
         <div class="item-left">
           <img height="64px" width="64px"
                src="http://fuss10.elemecdn.com/6/72/cb844f0bb60c502c6d5c05e0bddf5jpeg.jpeg?imageView2/1/w/114/h/114">
@@ -27,54 +82,113 @@
         </div>
         <div class="item-right">x1</div>
       </div>
-      <div class="item">
-        <div class="item-left">
-          <img height="64px" width="64px"
-               src="http://fuss10.elemecdn.com/6/72/cb844f0bb60c502c6d5c05e0bddf5jpeg.jpeg?imageView2/1/w/114/h/114">
+        <div class="item">
+          <div class="item-left">
+            <img height="64px" width="64px"
+                 src="http://fuss10.elemecdn.com/6/72/cb844f0bb60c502c6d5c05e0bddf5jpeg.jpeg?imageView2/1/w/114/h/114">
+          </div>
+          <div class="item-middle">
+            <div class="good-name">gname</div>
+            <div class="good-price">gprice</div>
+          </div>
+          <div class="item-right">x1</div>
         </div>
-        <div class="item-middle">
-          <div class="good-name">gname</div>
-          <div class="good-price">gprice</div>
+        <div class="item">
+          <div class="item-left">
+            <img height="64px" width="64px"
+                 src="http://fuss10.elemecdn.com/6/72/cb844f0bb60c502c6d5c05e0bddf5jpeg.jpeg?imageView2/1/w/114/h/114">
+          </div>
+          <div class="item-middle">
+            <div class="good-name">gname</div>
+            <div class="good-price">gprice</div>
+          </div>
+          <div class="item-right">x1</div>
         </div>
-        <div class="item-right">x1</div>
-      </div>
-      <div class="item">
-        <div class="item-left">
-          <img height="64px" width="64px"
-               src="http://fuss10.elemecdn.com/6/72/cb844f0bb60c502c6d5c05e0bddf5jpeg.jpeg?imageView2/1/w/114/h/114">
-        </div>
-        <div class="item-middle">
-          <div class="good-name">gname</div>
-          <div class="good-price">gprice</div>
-        </div>
-        <div class="item-right">x1</div>
       </div>
     </div>
     <div class="order-account">
-      <div class="total-count">付款合计</div>
-      <div class="to-pay">去付款</div>
+      <div class="total-count">付款合计: ￥19.99元</div>
+      <div class="to-pay" @click="chickPay">去付款</div>
     </div>
   </div>
 </template>
 
 <script>
+  import BScroll from 'better-scroll'
+  const ERR_OK = 0
   export default {
-    components: {}
+    data() {
+      return {
+        showFlag: true,
+        receipt: {},
+        username: '',
+        phone: '',
+        address: '',
+        goods: [],
+        totalCount: ''
+      }
+    },
+    components: {},
+    created() {
+      this.$http.get('/api/address').then((response) => {
+        response = response.body
+        if (response.errno === ERR_OK) {
+          this.receipt = response.data
+          this._initScroll()
+        }
+      })
+    },
+    methods: {
+      chickPay() {
+        this.username = this.$refs.username.value
+        this.phone = this.$refs.phone.value
+        this.address = this.$refs.address.value
+        if (!this.username) {
+          alert('联系人不能为空！')
+          return
+        }
+        let retPhone = /^[0-9]{11}$/
+        if (!retPhone.test(this.phone)) {
+          alert('手机号码格式错误！')
+          return
+        }
+        if (!this.address) {
+          alert('收货地址不能为空！')
+          return
+        }
+        console.log(this.username)
+      },
+      _initScroll() {
+        if (!this.scroll) {
+          this.scroll = new BScroll(this.$refs.goods, {
+            click: true
+          })
+        } else {
+          this.scroll.refresh()
+        }
+      }
+    }
   }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  @import "../../common/stylus/mixin.styl"
+  @import "../../common/stylus/index.styl"
   .order-detail
-    position: absolute
+    position: fixed
+    z-index: 50
     width: 100%
     .title
       padding-left: 9px
       line-height: 46px
       color: #fff
       font-size: 16px
+      text-align: center
       background: rgba(0, 160, 220, 0.8)
-      border-1px(rgba(7, 17, 27, 0.1))
+      .icon-arrow_lift
+        position: absolute
+        left: 0
+        top: 15px
+        padding-left: 9px
     .receipt-info
       padding: 9px
       line-height: 32px
@@ -83,9 +197,20 @@
       border-bottom: 10px solid #f3f5f7
       .contacts, .phone, .address
         border-1px(rgba(7, 17, 27, 0.1))
+        input
+          width: 100%
+          height: 28px
+          outline: none
       .address
         color: rgb(147, 153, 159)
-    .goods-wrapper
+    .goods
+      position: fixed
+      top: 170px
+      left: 0
+      bottom: 38px
+      width: 100%
+      z-index: 50
+      overflow: hidden
       .item
         display: flex
         padding: 9px
@@ -93,6 +218,8 @@
         font-size: 14px
         line-height: 24px
         border-1px(rgba(7, 17, 27, 0.1))
+        &:last-child
+          border-none()
         .item-left
           flex: 0 0 64px
           margin-right: 10px
@@ -114,11 +241,12 @@
       height: 38px
       line-height: 38px
       font-size: 14px
+      background: #141d27
       border-top: 1px solid #f3f5f7
       .total-count
         flex: 1
         padding-left: 8px
-        color: #93312E
+        color: #fff
       .to-pay
         flex: 0 0 110px
         color: #fff

@@ -37,6 +37,8 @@
     },
     components: {
       'v-header': header
+    },
+    methods: {
     }
   }
 </script>
