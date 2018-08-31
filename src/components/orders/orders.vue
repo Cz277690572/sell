@@ -24,6 +24,8 @@
           <div class="desc">实付￥{{item.pay}}元</div>
           <div class="pay" v-show="item.status == '待付款'">付款</div>
           <div class="confirm" v-show="item.status == '已发货'">确认收货</div>
+          <div class="service" v-show="item.status == '订单已送达'">订单已送达</div>
+          <div class="shut" v-show="item.status == '订单已关闭'">订单已关闭</div>
         </div>
         <div class="split"></div>
       </div>
@@ -118,17 +120,19 @@
           line-height: 28px
           font-size: 14px
           color: rgb(7, 17, 27)
-        .pay, .confirm
+        .pay, .confirm, .service, .shut
           flex: 0 0 70px
           height: 28px
           line-height: 28px
           color: #fff
           font-size: 14px
+          text-align: center
+        .pay
           background-color: #B42F2D
           border-radius: 4px
-          text-align: center
         .confirm
           background-color: #00b43c
+          border-radius: 4px
       .split
         width: 100%
         height: 8px

@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <orderdetail></orderdetail>
+    <shop></shop>
   </div>
 </template>
 
 <script>
-  import orderdetail from './components/orderdetail/orderdetail'
+  import shop from './components/shop/shop'
   export default {
     data() {
       return {}
     },
     components: {
-      'orderdetail': orderdetail
+      'shop': shop
     }
   }
 </script>

@@ -201,8 +201,6 @@
           width: 100%
           height: 28px
           outline: none
-      .address
-        color: rgb(147, 153, 159)
     .goods
       position: fixed
       top: 170px
