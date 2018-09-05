@@ -1,5 +1,35 @@
-export function saveToLocal(id, key, value) {
-  let cart = window.localStorage.__cart__
+// export function saveToLocal(shopId, key, value) {
+//   let shop = window.localStorage.__shop__
+//
+//   if (!shop) {
+//     shop = {}
+//     shop[shopId] = {}
+//   } else {
+//     shop = JSON.parse(shop)
+//     if (!shop[shopId]) {
+//       shop[shopId] = {}
+//     }
+//   }
+//   shop[shopId][key] = value
+//   window.localStorage.__shop__ = JSON.stringify(shop)
+// }
+//
+// export function loadFromLocal(shopId, key, def) {
+//   let shop = window.localStorage.__shop__
+//   if (!shop) {
+//     return def
+//   }
+//   shop = JSON.parse(shop)[shopId]
+//   if (!shop) {
+//     return def
+//   }
+//   let ret = shop[key]
+//   return ret || def
+// }
+
+export function saveToLocal(shopId, id, key, value) {
+  let name = '__cart' + shopId + '__'
+  let cart = window.localStorage.getItem(name)
   if (!cart) {
     cart = {}
     cart[id] = {}
@@ -10,11 +40,12 @@ export function saveToLocal(id, key, value) {
     }
   }
   cart[id][key] = value
-  window.localStorage.__cart__ = JSON.stringify(cart)
+  window.localStorage.setItem(name, JSON.stringify(cart))
 }
 
-export function loadFromLocal(id, key, def) {
-  let cart = window.localStorage.__cart__
+export function loadFromLocal(shopId, id, key, def) {
+  let name = '__cart' + shopId + '__'
+  let cart = window.localStorage.getItem(name)
   if (!cart) {
     return def
   }

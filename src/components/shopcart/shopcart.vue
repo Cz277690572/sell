@@ -13,7 +13,7 @@
           <div class="desc">免配送费</div>
         </div>
         <div class="content-right">
-          <div class="pay" :class="payClass">
+          <div class="pay" :class="payClass"  @click="orderdetail()">
             {{payDesc}}
           </div>
         </div>
@@ -41,7 +41,7 @@
                   <span>￥{{food.price*food.count}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food"></cartcontrol>
+                  <cartcontrol :food="food" :seller-id="sellerId"></cartcontrol>
                 </div>
               </li>
             </ul>
@@ -52,16 +52,20 @@
     <transition name="fade">
       <div class="listmask" @click="hidelist" v-show="listShow"></div>
     </transition>
+    <orderdetail :goods="selectFoods" :sellerId="sellerId" :from="from" ref="orderdetail"></orderdetail>
   </div>
 </template>
 
 <script>
   import cartcontrol from '../cartcontrol/cartcontrol'
+  import {saveToLocal} from '../../common/js/cart'
   import BScroll from 'better-scroll'
+  import orderdetail from '../orderdetail/orderdetail'
 
   export default {
     components: {
-      'cartcontrol': cartcontrol
+      'cartcontrol': cartcontrol,
+      'orderdetail': orderdetail
     },
     props: {
       selectFoods: {
@@ -75,6 +79,10 @@
         default: 0
       },
       minPrice: {
+        type: Number,
+        default: 0
+      },
+      sellerId: {
         type: Number,
         default: 0
       }
@@ -99,7 +107,8 @@
           }
         ],
         dropBalls: [],
-        fold: true
+        fold: true,
+        from: 'cart'
       }
     },
     computed: {
@@ -167,6 +176,13 @@
           }
         }
       },
+      orderdetail() {
+        // if (!event._constructed) {
+        //   return
+        // }
+        console.log('fromcart')
+        this.$refs.orderdetail.show()
+      },
       toggleList() {
         if (!this.totalCount) {
           return
@@ -212,6 +228,7 @@
       emptyCart() {
         this.selectFoods.forEach((food) => {
           food.count = 0
+          saveToLocal(this.sellerId, food.id, 'count', 0)
         })
       },
       hidelist() {

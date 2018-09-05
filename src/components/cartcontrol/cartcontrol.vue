@@ -18,10 +18,14 @@
     props: {
       food: {
         type: Object
+      },
+      sellerId: {
+        type: Number,
+        default: 0
       }
     },
     created() {
-      let count = loadFromLocal(this.food.id, 'count', 0)
+      let count = loadFromLocal(this.sellerId, this.food.id, 'count', 0)
       Vue.set(this.food, 'count', count)
     },
     methods: {
@@ -35,7 +39,7 @@
         } else {
           this.food.count++
         }
-        saveToLocal(this.food.id, 'count', this.food.count)
+        saveToLocal(this.sellerId, this.food.id, 'count', this.food.count)
         this.$emit('cart-add', event.target)
       },
       decreaseCart(event) {
@@ -47,7 +51,7 @@
         } else {
           this.food.count = 0
         }
-        saveToLocal(this.food.id, 'count', this.food.count)
+        saveToLocal(this.sellerId, this.food.id, 'count', this.food.count)
       }
     }
   }

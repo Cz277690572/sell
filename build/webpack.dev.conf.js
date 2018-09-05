@@ -21,6 +21,7 @@ var shops = appData.shops
 var seller = appData.seller  // 获取对应的本地数据
 var goods = appData.goods
 var orders = appData.orders
+var orderdetail = appData.orderdetail
 var address = appData.address
 var ratings = appData.ratings
 var apiRoutes = express.Router()
@@ -73,6 +74,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         res.json({
           errno: 0,
           data: orders
+        })
+      }),
+      app.get('/api/orderdetail', (req, res) => {
+        res.json({
+          errno: 0,
+          data: orderdetail
         })
       }),
       app.get('/api/address', (req, res) => {

@@ -1,7 +1,7 @@
 <template>
   <div class="order" ref="order">
     <div class="order-wrapper">
-      <div class="order-item" v-for="(item, index) in orders" :key="index">
+      <div class="order-item" v-for="(item, index) in orders" :key="index" @click="orderdetail(item.id)">
         <div class="order-header">
           <span>订单编号:</span><span class="order-no">{{item.order_no}}</span>
         </div>
@@ -16,7 +16,7 @@
           </div>
           <div class="order-right">
             <span v-show="item.status == '待付款'" class="order-status unpay">{{item.status}}</span>
-            <span v-show="item.status == '已付款'"  class="order-status payed">等待商家发货</span>
+            <span v-show="item.status == '已付款'" class="order-status payed">等待商家发货</span>
             <span v-show="item.status == '已发货'" class="order-status done">已发货</span>
           </div>
         </div>
@@ -24,23 +24,30 @@
           <div class="desc">实付￥{{item.pay}}元</div>
           <div class="pay" v-show="item.status == '待付款'">付款</div>
           <div class="confirm" v-show="item.status == '已发货'">确认收货</div>
-          <div class="service" v-show="item.status == '订单已送达'">订单已送达</div>
-          <div class="shut" v-show="item.status == '订单已关闭'">订单已关闭</div>
+          <div class="service" v-show="item.status == '订单已完成'">订单已完成</div>
+          <div class="shut" v-show="item.status == '订单已失效'">订单已失效</div>
         </div>
         <div class="split"></div>
       </div>
     </div>
+    <orderdetail :orderId="orderId" :from="from" ref="orderdetail"></orderdetail>
   </div>
 </template>
 
 <script>
   import BScroll from 'better-scroll'
+  import orderdetail from '../orderdetail/orderdetail'
 
   const ERR_OK = 0
   export default {
+    components: {
+      'orderdetail': orderdetail
+    },
     data() {
       return {
-        orders: []
+        orders: [],
+        from: 'order',
+        orderId: 0
       }
     },
     created() {
@@ -59,6 +66,11 @@
         this.scroll = new BScroll(this.$refs.order, {
           click: true
         })
+      },
+      orderdetail(id) {
+        console.log(id)
+        this.orderId = id
+        this.$refs.orderdetail.show()
       }
     }
   }

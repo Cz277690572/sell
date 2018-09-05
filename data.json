@@ -1,5 +1,6 @@
 {
   "seller": {
+    "id": 2,
     "name": "粥品香坊（回龙观）",
     "description": "蜂鸟专送",
     "deliveryTime": 38,
@@ -1411,6 +1412,7 @@
   ],
   "orders": [
     {
+      "id": 19,
       "order_no": "20180827123456",
       "desc": "描述",
       "count": 30,
@@ -1418,6 +1420,7 @@
       "pay": 9.99
     },
     {
+      "id": 19,
       "order_no": "20180827123456",
       "desc": "描述",
       "count": 30,
@@ -1425,6 +1428,7 @@
       "pay": 9.99
     },
     {
+      "id": 19,
       "order_no": "20180827123456",
       "desc": "描述",
       "count": 30,
@@ -1432,6 +1436,7 @@
       "pay": 9.99
     },
     {
+      "id": 19,
       "order_no": "20180827123456",
       "desc": "描述",
       "count": 30,
@@ -1439,6 +1444,7 @@
       "pay": 9.99
     },
     {
+      "id": 19,
       "order_no": "20180827123456",
       "desc": "描述",
       "count": 30,
@@ -1446,6 +1452,7 @@
       "pay": 9.99
     },
     {
+      "id": 19,
       "order_no": "20180827123456",
       "desc": "描述",
       "count": 30,
@@ -1453,6 +1460,56 @@
       "pay": 9.99
     }
   ],
+  "orderdetail": {
+    "id": 19,
+    "shop_id": 2,
+    "mid": 1,
+    "order_no": "A9035757820000878",
+    "order_title": "龟苓膏（芦苇）等",
+    "order_logo": "http://ruwei.com/static/upload/3837304710d6af3d/9704596f307eb1e7.jpg",
+    "freight_price": "0.00",
+    "goods_price": "32.50",
+    "goods_count": 3,
+    "real_price": "32.50",
+    "is_pay": 0,
+    "pay_type": "wechat微信支付",
+    "pay_no": "",
+    "pay_price": "32.50",
+    "pay_at": null,
+    "desc": null,
+    "status": 1,
+    "is_deleted": 0,
+    "create_at": "2018-09-03 14:52:58",
+    "type": 0,
+    "order_id": 19,
+    "express_username": "阿猫",
+    "express_phone": "15220501265",
+    "express_province": "广东省",
+    "express_city": "深圳市",
+    "express_area": "南山区",
+    "express_address": "2栋622",
+    "send_username": "门店3联系人",
+    "send_phone": "18476420333",
+    "send_province": "广东省",
+    "send_city": "珠海市",
+    "send_area": "金湾区",
+    "send_address": "珠海市城市职业技术学校",
+    "send_at": null,
+    "goodsList": [
+      {
+        "goods_title": "龟苓膏（芦苇）",
+        "goods_logo": "http://ruwei.com/static/upload/3837304710d6af3d/9704596f307eb1e7.jpg",
+        "selling_price": "10.00",
+        "number": 2
+      },
+      {
+        "goods_title": "猪扒饭",
+        "goods_logo": "http://ruwei.com/static/upload/cb3f32cb706c0325/c1c1afa9b2c5e9a3.jpg",
+        "selling_price": "12.50",
+        "number": 1
+      }
+    ]
+  },
   "shops": [
     {
       "name": "粥品香坊（回龙观）",
