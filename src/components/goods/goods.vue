@@ -37,7 +37,7 @@
         </li>
       </ul>
     </div>
-    <shopcart ref="shopcart" :selectFoods="selectFoods" :seller-id="seller.id" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart ref="shopcart" :selectFoods="selectFoods" :seller-status="seller.status" :seller-id="seller.id" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
@@ -120,12 +120,12 @@
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {
           click: true
         })
-
         this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
           click: true,
           probeType: 3
         })
-
+        console.log(this.$refs)
+        console.log(this.foodsScroll)
         this.foodsScroll.on('scroll', (pos) => {
           this.scrollY = Math.abs(Math.round(pos.y))
         })

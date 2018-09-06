@@ -13,7 +13,7 @@
           <div class="desc">免配送费</div>
         </div>
         <div class="content-right">
-          <div class="pay" :class="payClass"  @click="orderdetail()">
+          <div class="pay" :class="payClass" @click="orderdetail()">
             {{payDesc}}
           </div>
         </div>
@@ -52,7 +52,7 @@
     <transition name="fade">
       <div class="listmask" @click="hidelist" v-show="listShow"></div>
     </transition>
-    <orderdetail :goods="selectFoods" :sellerId="sellerId" :from="from" ref="orderdetail"></orderdetail>
+    <orderdetail :goods="selectFoods" :sellerId="sellerId" :from="from" :sellerStatus="sellerStatus" :minPrice="minPrice" ref="orderdetail"></orderdetail>
   </div>
 </template>
 
@@ -83,6 +83,10 @@
         default: 0
       },
       sellerId: {
+        type: Number,
+        default: 0
+      },
+      sellerStatus: {
         type: Number,
         default: 0
       }
@@ -127,6 +131,9 @@
         return count
       },
       payDesc() {
+        if (this.sellerStatus === 0) {
+          return '休息中'
+        }
         if (this.totalPrice === 0) {
           return `￥${this.minPrice}元起送`
         } else if (this.totalPrice < this.minPrice) {
@@ -137,6 +144,9 @@
         }
       },
       payClass() {
+        if (this.sellerStatus === 0) {
+          return 'not-enough'
+        }
         if (this.totalPrice < this.minPrice) {
           return 'not-enough'
         } else {
@@ -180,7 +190,9 @@
         // if (!event._constructed) {
         //   return
         // }
-        console.log('fromcart')
+        if (this.sellerStatus === 0 || this.totalPrice < this.minPrice) {
+          return
+        }
         this.$refs.orderdetail.show()
       },
       toggleList() {
@@ -393,6 +405,7 @@
             position: absolute
             right: 0
             bottom: 6px
+
   .listmask
     position: fixed
     opacity: 1
