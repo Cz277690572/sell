@@ -24,13 +24,13 @@
           <div class="desc">实付￥{{item.pay}}元</div>
           <div class="pay" v-show="item.status == '待付款'">付款</div>
           <div class="confirm" v-show="item.status == '已发货'">确认收货</div>
-          <div class="service" v-show="item.status == '订单已完成'">订单已完成</div>
+          <div class="complete" v-show="item.status == '订单已完成' || item.status == '已收货'">订单已完成</div>
           <div class="shut" v-show="item.status == '订单已失效'">订单已失效</div>
         </div>
         <div class="split"></div>
       </div>
     </div>
-    <orderdetail :orderId="orderId" :from="from" ref="orderdetail"></orderdetail>
+    <orderdetail :orderId="orderId" :sellerStatus="seller.status" :minPrice="seller.minPrice" :from="from" ref="orderdetail"></orderdetail>
   </div>
 </template>
 
@@ -43,6 +43,11 @@
     components: {
       'orderdetail': orderdetail
     },
+    props: {
+      seller: {
+        type: Object
+      }
+    },
     data() {
       return {
         orders: [],
@@ -51,6 +56,7 @@
       }
     },
     created() {
+      console.log(this.seller)
       this.$http.get('/api/orders').then((response) => {
         response = response.body
         if (response.errno === ERR_OK) {
@@ -132,7 +138,7 @@
           line-height: 28px
           font-size: 14px
           color: rgb(7, 17, 27)
-        .pay, .confirm, .service, .shut
+        .pay, .confirm, .complete, .shut
           flex: 0 0 70px
           height: 28px
           line-height: 28px

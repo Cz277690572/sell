@@ -1,80 +1,82 @@
 <template>
   <transition name="move">
     <div v-show="showFlag" class="order-detail" ref="orders">
-    <div>
-      <div class="title">
-        <i class="icon-arrow_lift" @click="hidden()"></i>
-        订单详情
-      </div>
-      <div v-show="from=='order'" class="order-info">
-        <div class="order-summary">
-          <div class="order-time-no">
-            <div class="order-time">
-              <span>下单时间:</span>
-              <span class="text">20186565656565</span>
+      <div>
+        <div class="title">
+          <i class="icon-arrow_lift" @click="hidden()"></i>
+          订单详情
+        </div>
+        <div v-show="from=='order'" class="order-info">
+          <div class="order-summary">
+            <div class="order-time-no">
+              <div class="order-time">
+                <span>下单时间:</span>
+                <span class="text">{{order.create_at}}</span>
+              </div>
+              <div class="order-no">
+                <span>订单编号:</span>
+                <span class="text">{{order.order_no}}</span>
+              </div>
             </div>
-            <div class="order-no">
-              <span>订单编号:</span>
-              <span class="text">20186565656565</span>
+            <div class="order-status">
+              <span v-show="order.status=='未支付'" class="unpay">未支付</span>
+              <span v-show="order.status=='已支付'" class="payed">等待商家发货</span>
+              <span v-show="order.status=='已发货'" class="done">已发货</span>
+              <span v-show="order.status=='订单已完成' || order.status=='已收货'" class="complete">订单已完成</span>
+              <span v-show="order.status=='订单已失效'" class="shut">订单已失效</span>
             </div>
           </div>
-          <div class="order-status">
-            <span class="unpay">未支付</span>
-            <!--<text class="payed"></text>-->
-            <!--<text class="done"></text>-->
+          <div class="order-contact-info">
+            <div class="user-info">
+              <div class="name">
+                <span>联系人:</span>
+                <span class="text">{{order.express_username}}</span>
+              </div>
+              <div class="phone">
+                <span>手机号:</span>
+                <span class="text">{{order.express_phone}}</span>
+              </div>
+            </div>
+            <div class="address">
+              <span>{{order.express_address}}</span>
+            </div>
           </div>
         </div>
-        <div class="order-contact-info">
-          <div class="user-info">
-            <div class="name">
-              <span>联系人:</span>
-              <span class="text">阿猫</span>
-            </div>
-            <div class="phone">
-              <span>手机号:</span>
-              <span class="text">15220501265</span>
-            </div>
+        <div v-show="from=='cart'" class="receipt-info">
+          <div class="contacts">
+            <input name="username" placeholder="联系人 (必填)" v-model="receipt.username" ref="username"/>
+          </div>
+          <div class="phone">
+            <input name="phone" placeholder="联系手机号 (必填)" v-model="receipt.phone" ref="phone"/>
           </div>
           <div class="address">
-            <span>2栋622</span>
+            <input name="address" placeholder="收货地址 (必填)" v-model="receipt.address" ref="address"/>
+          </div>
+          <div class="desc">
+            <input name="desc" placeholder="备注 (选填)" v-model="receipt.desc" ref="desc"/>
           </div>
         </div>
-      </div>
-      <div v-show="from=='cart'" class="receipt-info">
-        <div class="contacts">
-          <input name="username" placeholder="联系人 (必填)" v-model="receipt.username" ref="username"/>
-        </div>
-        <div class="phone">
-          <input name="phone" placeholder="联系手机号 (必填)" v-model="receipt.phone" ref="phone"/>
-        </div>
-        <div class="address">
-          <input name="address" placeholder="收货地址 (必填)" v-model="receipt.address" ref="address"/>
-        </div>
-        <div class="desc">
-          <input name="desc" placeholder="备注 (选填)" v-model="receipt.desc" ref="desc"/>
-        </div>
-      </div>
-      <div class="goods" ref="goods">
-        <div class="goods-wrapper">
-          <div class="item" v-for="(item, index) in goods" :key="index">
-            <div class="item-left">
-              <img height="64px" width="64px"
-                   :src="item.icon">
+        <div class="goods" ref="goods">
+          <div class="goods-wrapper">
+            <div class="item" v-for="(item, index) in goods" :key="index">
+              <div class="item-left">
+                <img height="64px" width="64px"
+                     :src="item.icon">
+              </div>
+              <div class="item-middle">
+                <div class="good-name">{{item.name}}</div>
+                <div class="good-price">￥{{item.price}}</div>
+              </div>
+              <div class="item-right">{{item.count}}</div>
             </div>
-            <div class="item-middle">
-              <div class="good-name">{{item.name}}</div>
-              <div class="good-price">￥{{item.price}}</div>
-            </div>
-            <div class="item-right">{{item.count}}</div>
           </div>
         </div>
-      </div>
-      <div class="order-account">
-        <div class="total-count">付款合计: ￥{{totalPrice}}</div>
-        <div class="to-pay" @click="chickPay">{{payDesc}}</div>
+        <div class="order-account" v-show="orderStatus=='未支付'">
+          <div class="total-count">付款合计: ￥{{totalPrice}}</div>
+          <div class="to-pay" @click="checkPay" :class="payClass">{{payDesc}}</div>
+        </div>
       </div>
     </div>
-  </div>
   </transition>
 </template>
 
@@ -97,7 +99,7 @@
         type: Number,
         default: 0
       },
-      goods: {
+      cartGoods: {
         type: Array,
         default() {
           return []
@@ -115,18 +117,29 @@
         address: '',
         desc: '',
         totalPrice: 0,
-        payDesc: ''
+        payDesc: '',
+        goods: [],
+        order: {},
+        orderStatus: '未支付'
       }
     },
     components: {},
     created() {
     },
+    computed: {
+      payClass() {
+        if (this.sellerStatus === 0) {
+          return 'not-enough'
+        }
+        if (this.totalPrice < this.minPrice) {
+          return 'not-enough'
+        } else {
+          return 'enough'
+        }
+      }
+    },
     methods: {
       show() {
-        console.log(this.from)
-        console.log(this.goods)
-        console.log(this.sellerId)
-        console.log(this.sellerStatus)
         this.showFlag = true
         this.totalPrice = 0
         if (this.from === 'cart') {
@@ -136,6 +149,7 @@
               this.receipt = response.data
             }
           })
+          this.goods = this.cartGoods
           this.goods.forEach((item) => {
             this.totalPrice += item['price'] * item['count']
           })
@@ -146,17 +160,30 @@
         } else if (this.from === 'order') {
           this.$http.get('/api/orderdetail').then((response) => {
             response = response.body
-            console.log(response.data)
-            if (response.errno === ERR_OK) {
-              this.receipt.username = response.data.express_username
-              this.receipt.phone = response.data.express_phone
-              this.receipt.address = response.data.express_address
-              this.receipt.desc = response.data.desc
+            this.order = response.data
+            this.goods = this.order.goodsList
+            this.goods.forEach((item) => {
+              this.totalPrice += item['price'] * item['count']
+            })
+            this.$nextTick(() => {
+              this._initScroll()
+            })
+            if (this.order.status !== '未支付') {
+              this.orderStatus = this.order.status
+            } else {
+              this._payDesc()
             }
           })
         }
       },
-      chickPay() {
+      checkPay() {
+        if (this.from === 'cart') {
+          this._fromCart()
+        } else if (this.from === 'order') {
+          this._fromOrder()
+        }
+      },
+      _fromCart() {
         this.username = this.$refs.username.value
         this.phone = this.$refs.phone.value
         this.address = this.$refs.address.value
@@ -174,9 +201,12 @@
           alert('收货地址不能为空！')
           return
         }
-        console.log('提交参数审核通过，提交订单,清空购物车，跳转至订单页面')
+        console.log('提交参数审核通过，提交订单;返回订单id,清空购物车,提交订单id，拉起微信支付，返回支付结果, 跳转至支付结果')
         // 求参数{"username":"阿猫","phone":"15220501265","address":"2栋622","desc":"不要加辣","goods":[{"goods_id":"2","count":"2"},{"goods_id":"1","count":"1"}]}
         this._emptyCart()
+      },
+      _fromOrder() {
+        console.log('提交订单ID，拉起微信支付, 返回支付结果, 跳转至支付结果')
       },
       _payDesc() {
         if (this.sellerStatus === 0) {
@@ -192,7 +222,7 @@
         }
       },
       _emptyCart() {
-        this.goods.forEach((food) => {
+        this.cartGoods.forEach((food) => {
           food.count = 0
           saveToLocal(this.sellerId, food.id, 'count', 0)
         })
@@ -258,7 +288,12 @@
           flex: 0 0 64px
           line-height: 72px
           text-align: right
-          color: red
+          .unpay, .shut
+            color: red
+          .payed
+            color: #DDB477
+          .done, .complete
+            color: #57AB53
       .order-contact-info
         padding: 1px 9px
         font-size: 14px
@@ -287,13 +322,12 @@
           height: 28px
           outline: none
     .goods
-      border: 1px solid red
       position: fixed
       display: flex
       flex-direction: column
       top: 202px
       left: 0
-      bottom: 48px
+      bottom: 0px
       overflow: hidden
       width: 100%
       .goods-wrapper
@@ -305,7 +339,7 @@
           line-height: 24px
           border-1px(rgba(7, 17, 27, 0.1))
           &:last-child
-            border-none()
+            margin-bottom: 48px
           .item-left
             flex: 0 0 64px
             margin-right: 10px
@@ -337,5 +371,9 @@
         flex: 0 0 110px
         color: #fff
         text-align: center
-        background: #00b43c
+        &.not-enough
+          background: #2b333b
+        &.enough
+          background: #00b43c
+          color: #fff
 </style>

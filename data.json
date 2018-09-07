@@ -1478,7 +1478,7 @@
     "pay_price": "32.50",
     "pay_at": null,
     "desc": null,
-    "status": 1,
+    "status": "未支付",
     "is_deleted": 0,
     "create_at": "2018-09-03 14:52:58",
     "type": 0,
@@ -1498,16 +1498,16 @@
     "send_at": null,
     "goodsList": [
       {
-        "goods_title": "龟苓膏（芦苇）",
-        "goods_logo": "http://ruwei.com/static/upload/3837304710d6af3d/9704596f307eb1e7.jpg",
-        "selling_price": "10.00",
-        "number": 2
+        "name": "龟苓膏（芦苇）",
+        "icon": "http://ruwei.com/static/upload/3837304710d6af3d/9704596f307eb1e7.jpg",
+        "price": "10.00",
+        "count": 2
       },
       {
-        "goods_title": "猪扒饭",
-        "goods_logo": "http://ruwei.com/static/upload/cb3f32cb706c0325/c1c1afa9b2c5e9a3.jpg",
-        "selling_price": "12.50",
-        "number": 1
+        "name": "猪扒饭",
+        "icon": "http://ruwei.com/static/upload/cb3f32cb706c0325/c1c1afa9b2c5e9a3.jpg",
+        "price": "12.50",
+        "count": 1
       }
     ]
   },

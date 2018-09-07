@@ -52,7 +52,7 @@
     <transition name="fade">
       <div class="listmask" @click="hidelist" v-show="listShow"></div>
     </transition>
-    <orderdetail :goods="selectFoods" :sellerId="sellerId" :from="from" :sellerStatus="sellerStatus" :minPrice="minPrice" ref="orderdetail"></orderdetail>
+    <orderdetail :cartGoods="selectFoods" :sellerId="sellerId" :from="from" :sellerStatus="sellerStatus" :minPrice="minPrice" ref="orderdetail"></orderdetail>
   </div>
 </template>
 
