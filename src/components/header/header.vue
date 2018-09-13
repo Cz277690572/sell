@@ -1,5 +1,8 @@
 <template>
   <div class="header">
+    <div class="go-back" @click="_goBack">
+      <i class="icon-arrow_lift"></i>
+    </div>
     <div class="content-wrapper">
       <div class="avatar">
         <img width="64" height="64" :src="seller.avatar">
@@ -67,6 +70,9 @@
       },
       closeDetail: function() {
         this.detailShow = false
+      },
+      _goBack: function() {
+        this.$router.push({path: '/shoplist'})
       }
     }
   }
@@ -80,8 +86,15 @@
     color: #fff
     overflow: hidden
     background: rgba(7,17,27,0.5)
+    .go-back
+      .icon-arrow_lift
+        position: absolute
+        left: 0
+        top: 10px
+        padding-left: 9px
     .content-wrapper
-      padding: 24px 12px 18px 24px
+      /*padding: 24px 12px 18px 24px*/
+      padding: 32px 12px 10px 36px
       font-size: 0
       .avatar
         display: inline-block

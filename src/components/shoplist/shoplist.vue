@@ -1,20 +1,18 @@
 <template>
-  <div>
-    <div class="shoplist">
-      <div class="title">请选择商家</div>
-      <div class="shops" ref="shops">
-        <div class="shops-wrapper">
-          <div class="shop-item" v-for="(item, index) in shops" :key="index" @click="selectShop(item,$event)">
-            <div class="shop-left">
-              <img width="64px" height="64px" :src="item.avatar">
+  <div class="shoplist">
+    <div class="title">请选择商家</div>
+    <div class="shops" ref="shops">
+      <div class="shops-wrapper">
+        <div class="shop-item" v-for="(item, index) in shops" :key="index" @click="selectShop(item,$event)">
+          <div class="shop-left">
+            <img width="64px" height="64px" :src="item.avatar">
+          </div>
+          <div class="shop-right">
+            <div class="shop-name">{{item.name}}</div>
+            <div class="shop-status">状态: <span class="close" :class="{on:item.status=='营业中'}">{{item.status}}</span>
             </div>
-            <div class="shop-right">
-              <div class="shop-name">{{item.name}}</div>
-              <div class="shop-status">状态: <span class="close" :class="{on:item.status=='营业中'}">{{item.status}}</span>
-              </div>
-              <div class="shop-desc">说明: {{item.desc}}</div>
-              <div class="shop-minPrice">起送价{{item.minPrice}}元 <span class="modifier">|</span> 免配送费</div>
-            </div>
+            <div class="shop-desc">说明: {{item.desc}}</div>
+            <div class="shop-minPrice">起送价{{item.minPrice}}元 <span class="modifier">|</span> 免配送费</div>
           </div>
         </div>
       </div>
@@ -24,6 +22,7 @@
 
 <script>
   import BScroll from 'better-scroll'
+  import {EchoUrl} from '../../common/js/base'
   const ERR_OK = 0
   export default {
     data() {
@@ -32,6 +31,7 @@
         selectedShop: {}
       }
     },
+    created() {},
     watch: {
       'shops'() {
         this.$nextTick(() => {
@@ -51,10 +51,12 @@
     methods: {
       _initScroll() {
         if (!this.scroll) {
+          EchoUrl()
           this.scroll = new BScroll(this.$refs.shops, {
             click: true
           })
         } else {
+          EchoUrl()
           this.scroll.refresh()
         }
       },
@@ -62,7 +64,9 @@
         if (!event._constructed) {
           return
         }
-        console.log(shop)
+        this.$emit('goShop', shop)
+        // console.log(shop)
+        // this.$router.push({path: '/goods'})
       }
     }
   }

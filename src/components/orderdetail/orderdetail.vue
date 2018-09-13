@@ -258,6 +258,7 @@
           this._emptyCart()
           this.$router.push({path: '/orders'})
         } else if (this.from === 'order') {
+          this.$emit('loadorder')
           this.payShow = false
           this.showFlag = false
         }

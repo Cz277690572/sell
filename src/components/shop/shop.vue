@@ -23,10 +23,14 @@
   export default {
     data() {
       return {
-        seller: {}
+        seller: {},
+        shopId: 0
       }
     },
     created() {
+      this.shopId = this.$route.query.shopId
+      console.log(this.shopId)
+
       this.$http.get('/api/seller').then((response) => {
         response = response.body
         if (response.errno === ERR_OK) {

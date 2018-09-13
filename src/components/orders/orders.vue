@@ -1,7 +1,7 @@
 <template>
   <div class="order" ref="order">
     <div class="order-wrapper">
-      <div class="order-item" v-for="(item, index) in orders" :key="index" @click="orderdetail(item.id)">
+      <div class="order-item" v-for="(item, index) in orders" :key="index" @click="orderdetail(item.id, $event)">
         <div class="order-header">
           <span>订单编号:</span><span class="order-no">{{item.order_no}}</span>
         </div>
@@ -30,7 +30,7 @@
         <div class="split"></div>
       </div>
     </div>
-    <orderdetail :orderId="orderId" :sellerStatus="seller.status" :minPrice="seller.minPrice" :from="from" ref="orderdetail"></orderdetail>
+    <orderdetail :orderId="orderId" :sellerStatus="seller.status" :minPrice="seller.minPrice" :from="from" v-on:loadorder="loadData" ref="orderdetail"></orderdetail>
   </div>
 </template>
 
@@ -57,15 +57,7 @@
     },
     created() {
       console.log(this.seller)
-      this.$http.get('/api/orders').then((response) => {
-        response = response.body
-        if (response.errno === ERR_OK) {
-          this.orders = response.data
-          this.$nextTick(() => {
-            this._initScroll()
-          })
-        }
-      })
+      this.loadData()
     },
     methods: {
       _initScroll() {
@@ -73,7 +65,22 @@
           click: true
         })
       },
-      orderdetail(id) {
+      loadData() {
+        this.$http.get('/api/orders').then((response) => {
+          response = response.body
+          if (response.errno === ERR_OK) {
+            this.orders = response.data
+            console.log(this.orders)
+            this.$nextTick(() => {
+              this._initScroll()
+            })
+          }
+        })
+      },
+      orderdetail(id, event) {
+        if (!event._constructed) {
+          return
+        }
         console.log(id)
         this.orderId = id
         this.$refs.orderdetail.show()

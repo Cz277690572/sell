@@ -5,7 +5,7 @@ import App from './App'
 import VueResource from 'vue-resource'
 
 import shoplist from './components/shoplist/shoplist'
-import shop from './components/shop/shop'
+// import shop from './components/shop/shop'
 import goods from './components/goods/goods'
 import orders from './components/orders/orders'
 import seller from './components/seller/seller'
@@ -22,7 +22,7 @@ Vue.config.productionTip = false
 
 const routes = [
   {path: '/shoplist', name: 'shoplist', component: shoplist},
-  {path: '/shop', name: 'shop', component: shop},
+  // {path: '/shop', name: 'shop', component: shop},
   {path: '/goods', name: 'goods', component: goods},
   {path: '/orders', name: 'orders', component: orders},
   {path: '/seller', name: 'seller', component: seller},
