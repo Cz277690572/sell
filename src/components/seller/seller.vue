@@ -69,6 +69,7 @@
     },
     watch: {
       'seller'() {
+        console.log(this.seller)
         this.$nextTick(() => {
           this._initScroll()
           this._initPics()

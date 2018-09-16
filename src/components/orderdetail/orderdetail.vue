@@ -119,21 +119,11 @@
 <script>
   import BScroll from 'better-scroll'
   import {saveToLocal} from '../../common/js/cart'
-
   const ERR_OK = 0
   export default {
     props: {
-      sellerId: {
-        type: Number,
-        default: 0
-      },
-      sellerStatus: {
-        type: Number,
-        default: 0
-      },
-      minPrice: {
-        type: Number,
-        default: 0
+      seller: {
+        type: Object
       },
       cartGoods: {
         type: Array,
@@ -161,15 +151,14 @@
         payRes: ''
       }
     },
-    components: {},
     created() {
     },
     computed: {
       payClass() {
-        if (this.sellerStatus === 0) {
+        if (this.seller.status === 0) {
           return 'not-enough'
         }
-        if (this.totalPrice < this.minPrice) {
+        if (this.totalPrice < this.seller.minPrice) {
           return 'not-enough'
         } else {
           return 'enough'
@@ -269,13 +258,13 @@
         this.payRes = 'success'
       },
       _payDesc() {
-        if (this.sellerStatus === 0) {
+        if (this.seller.status === 0) {
           this.payDesc = '休息中'
         }
         if (this.totalPrice === 0) {
-          this.payDesc = `￥${this.minPrice}元起送`
-        } else if (this.totalPrice < this.minPrice) {
-          let diff = this.minPrice - this.totalPrice
+          this.payDesc = `￥${this.seller.minPrice}元起送`
+        } else if (this.totalPrice < this.seller.minPrice) {
+          let diff = this.seller.minPrice - this.totalPrice
           this.payDesc = `还差￥${diff}元起送`
         } else {
           this.payDesc = '去支付'
@@ -284,7 +273,7 @@
       _emptyCart() {
         this.cartGoods.forEach((food) => {
           food.count = 0
-          saveToLocal(this.sellerId, food.id, 'count', 0)
+          saveToLocal(this.seller.id, food.id, 'count', 0)
         })
       },
       _initScroll() {

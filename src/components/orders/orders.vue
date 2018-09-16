@@ -30,14 +30,14 @@
         <div class="split"></div>
       </div>
     </div>
-    <orderdetail :orderId="orderId" :sellerStatus="seller.status" :minPrice="seller.minPrice" :from="from" v-on:loadorder="loadData" ref="orderdetail"></orderdetail>
+    <orderdetail v-if="_checkShop(shop)" :orderId="orderId" :from="from" :seller="shop" :sellerStatus="seller.status" :minPrice="seller.minPrice" v-on:loadorder="_loadData" ref="orderdetail"></orderdetail>
   </div>
 </template>
 
 <script>
   import BScroll from 'better-scroll'
   import orderdetail from '../orderdetail/orderdetail'
-
+  import {getStorageSync} from '../../common/js/base'
   const ERR_OK = 0
   export default {
     components: {
@@ -50,22 +50,41 @@
     },
     data() {
       return {
+        shop: {},
         orders: [],
         from: 'order',
         orderId: 0
       }
     },
     created() {
-      console.log(this.seller)
-      this.loadData()
+      // 判断缓父组件是否传来this.seller
+      // 是不做处理
+      // 不是读取缓存中的shopId
+      if (JSON.stringify(this.seller) === '{}') {
+        console.log('orders强制刷新')
+        this.shopId = getStorageSync('shopId', 0)
+        this.$http.get('/api/seller').then((response) => {
+          response = response.body
+          if (response.errno === ERR_OK) {
+            this.shop = response.data
+            this._loadData()
+          }
+        })
+      } else {
+        console.log('orders不是强制刷新')
+        this.shop = this.seller
+        this._loadData()
+      }
     },
     methods: {
-      _initScroll() {
-        this.scroll = new BScroll(this.$refs.order, {
-          click: true
-        })
+      _checkShop(Obj) {
+        if (JSON.stringify(Obj) === '{}') {
+          return false
+        } else {
+          return true
+        }
       },
-      loadData() {
+      _loadData() {
         this.$http.get('/api/orders').then((response) => {
           response = response.body
           if (response.errno === ERR_OK) {
@@ -75,6 +94,11 @@
               this._initScroll()
             })
           }
+        })
+      },
+      _initScroll() {
+        this.scroll = new BScroll(this.$refs.order, {
+          click: true
         })
       },
       orderdetail(id, event) {

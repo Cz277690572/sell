@@ -18,9 +18,17 @@
 
 <script>
   import header from '../header/header.vue'
-
+  import {setStorageSync, getStorageSync} from '../../common/js/base'
   const ERR_OK = 0
   export default {
+    props: {
+      shop: {
+        type: Object,
+        default() {
+          return {}
+        }
+      }
+    },
     data() {
       return {
         seller: {},
@@ -28,16 +36,29 @@
       }
     },
     created() {
-      this.shopId = this.$route.query.shopId
-      console.log(this.shopId)
-
-      this.$http.get('/api/seller').then((response) => {
-        response = response.body
-        if (response.errno === ERR_OK) {
-          this.seller = response.data
-          console.log(this.seller)
-        }
-      })
+      // 判断缓父组件是否传来this.shop
+      // 是重置this.shop.id
+      // 不是读取缓存中的this.shop.id
+      if (JSON.stringify(this.shop) !== '{}') {
+        this.shopId = this.shop.id
+        setStorageSync('shopId', this.shopId)
+        console.log('shop不是强制刷新,设置缓存')
+        this.$http.get('/api/seller').then((response) => {
+          response = response.body
+          if (response.errno === ERR_OK) {
+            this.seller = response.data
+          }
+        })
+      } else {
+        this.shopId = getStorageSync('shopId', 0)
+        console.log('shop强制刷新,读取缓存')
+        this.$http.get('/api/seller').then((response) => {
+          response = response.body
+          if (response.errno === ERR_OK) {
+            this.seller = response.data
+          }
+        })
+      }
     },
     components: {
       'v-header': header

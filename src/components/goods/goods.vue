@@ -26,10 +26,11 @@
                   <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
                 </div>
                 <div class="price">
-                  <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
+                  <span class="now">￥{{food.price}}</span><span class="old"
+                                                                v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food" :seller-id="seller.id" v-on:cart-add="cartAdd"></cartcontrol>
+                  <cartcontrol v-if="_checkShop(shop)" :food="food" :seller-id="shop.id" v-on:cart-add="cartAdd"></cartcontrol>
                 </div>
               </div>
             </li>
@@ -37,7 +38,11 @@
         </li>
       </ul>
     </div>
-    <shopcart ref="shopcart" :selectFoods="selectFoods" :seller-status="seller.status" :seller-id="seller.id" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart v-if="_checkShop(shop)" ref="shopcart" :selectFoods="selectFoods" :seller="shop"
+              :seller-status="seller.status"
+              :seller-id="seller.id  || 1" :delivery-price="seller.deliveryPrice"
+              :min-price="seller.minPrice"
+    ></shopcart>
   </div>
 </template>
 
@@ -45,6 +50,7 @@
   import BScroll from 'better-scroll'
   import shopcart from '../shopcart/shopcart'
   import cartcontrol from '../cartcontrol/cartcontrol'
+  import {getStorageSync} from '../../common/js/base'
 
   const ERR_OK = 0
 
@@ -62,7 +68,8 @@
       return {
         goods: [],
         listHeight: [],
-        scrollY: 0
+        scrollY: 0,
+        shop: {}
       }
     },
     computed: {
@@ -76,7 +83,7 @@
         }
         return 0
       },
-      selectFoods () {
+      selectFoods() {
         let foods = []
         this.goods.forEach((good) => {
           good.foods.forEach((food) => {
@@ -89,19 +96,46 @@
       }
     },
     created() {
-      this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
-      this.$http.get('/api/goods').then((response) => {
-        response = response.body
-        if (response.errno === ERR_OK) {
-          this.goods = response.data
-          this.$nextTick(() => {
-            this._initScroll()
-            this._calculateHeight()
-          })
-        }
-      })
+      // 判断缓父组件是否传来this.seller
+      // 是不做处理
+      // 不是读取缓存中的shopId
+      if (JSON.stringify(this.seller) === '{}') {
+        console.log('goods强制刷新')
+        this.shopId = getStorageSync('shopId', 0)
+        this.$http.get('/api/seller').then((response) => {
+          response = response.body
+          if (response.errno === ERR_OK) {
+            this.shop = response.data
+            this._loadData()
+          }
+        })
+      } else {
+        console.log('goods不是强制刷新')
+        this.shop = this.seller
+        this._loadData()
+      }
     },
     methods: {
+      _checkShop(Obj) {
+        if (JSON.stringify(Obj) === '{}') {
+          return false
+        } else {
+          return true
+        }
+      },
+      _loadData() {
+        this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+        this.$http.get('/api/goods').then((response) => {
+          response = response.body
+          if (response.errno === ERR_OK) {
+            this.goods = response.data
+            this.$nextTick(() => {
+              this._initScroll()
+              this._calculateHeight()
+            })
+          }
+        })
+      },
       selMenu(index, event) {
         if (!event._constructed) {
           return
@@ -124,8 +158,6 @@
           click: true,
           probeType: 3
         })
-        console.log(this.$refs)
-        console.log(this.foodsScroll)
         this.foodsScroll.on('scroll', (pos) => {
           this.scrollY = Math.abs(Math.round(pos.y))
         })

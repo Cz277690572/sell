@@ -1,22 +1,24 @@
 <template>
   <div id="app">
-    <shoplist v-if="!isShowShop" @goShop="changeShow"></shoplist>
+    <shopList v-if="!isShowShop" @goShop="shopShow"></shopList>
     <shop v-if="isShowShop" :shop="shop"></shop>
   </div>
 </template>
 
 <script>
   import shop from './components/shop/shop'
-  import shoplist from './components/shoplist/shoplist'
+  import shopList from './components/shoplist/shoplist'
 
   export default {
     components: {
       'shop': shop,
-      'shoplist': shoplist
+      'shopList': shopList
     },
     data() {
       return {
-        isShowShop: false
+        shop: {},
+        isShowShop: false,
+        thisUrl: '/'
       }
     },
     watch: {
@@ -25,20 +27,37 @@
         console.log(thisUrl)
         if (thisUrl === '/goods') {
           this.isShowShop = true
-        } else if (thisUrl === '/shoplist') {
-          this.isShowShop = false
-        } else {
+        } else if (thisUrl === '/orders') {
           this.isShowShop = true
+        } else if (thisUrl === '/seller') {
+          this.isShowShop = true
+        } else {
+          this.isShowShop = false
         }
+      }
+    },
+    beforeMount() {
+      const thisUrl = this.$route.path
+      console.log(thisUrl)
+      if (thisUrl === '/goods') {
+        this.isShowShop = true
+        this.$router.push({path: '/goods'})
+      } else if (thisUrl === '/orders') {
+        this.isShowShop = true
+        this.$router.push({path: '/orders'})
+      } else if (thisUrl === '/seller') {
+        this.isShowShop = true
+        this.$router.push({path: '/seller'})
+      } else {
+        this.isShowShop = false
       }
     },
     created() {
     },
     methods: {
-      changeShow(seller) {
-        console.log(seller)
-        // this.$router.push({path: '/goods'})
-        this.$router.push({path: '/goods', query: {shopId: seller.id}})
+      shopShow(seller) {
+        this.shop = seller
+        this.$router.push({path: '/goods'})
       }
     }
   }

@@ -41,7 +41,7 @@
                   <span>￥{{food.price*food.count}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food" :seller-id="sellerId"></cartcontrol>
+                  <cartcontrol :food="food" :seller-id="seller.id"></cartcontrol>
                 </div>
               </li>
             </ul>
@@ -52,7 +52,7 @@
     <transition name="fade">
       <div class="listmask" @click="hidelist" v-show="listShow"></div>
     </transition>
-    <orderdetail :cartGoods="selectFoods" :sellerId="sellerId" :from="from" :sellerStatus="sellerStatus" :minPrice="minPrice" ref="orderdetail"></orderdetail>
+    <orderdetail :cartGoods="selectFoods" :from="from" :seller="seller" ref="orderdetail"></orderdetail>
   </div>
 </template>
 
@@ -61,7 +61,8 @@
   import {saveToLocal} from '../../common/js/cart'
   import BScroll from 'better-scroll'
   import orderdetail from '../orderdetail/orderdetail'
-
+  import {getStorageSync} from '../../common/js/base'
+  const ERR_OK = 0
   export default {
     components: {
       'cartcontrol': cartcontrol,
@@ -74,25 +75,17 @@
           return []
         }
       },
+      seller: {
+        type: Object
+      },
       deliveryPrice: {
-        type: Number,
-        default: 0
-      },
-      minPrice: {
-        type: Number,
-        default: 0
-      },
-      sellerId: {
-        type: Number,
-        default: 0
-      },
-      sellerStatus: {
         type: Number,
         default: 0
       }
     },
     data() {
       return {
+        shop: {},
         balls: [
           {
             show: false
@@ -131,23 +124,23 @@
         return count
       },
       payDesc() {
-        if (this.sellerStatus === 0) {
+        if (this.seller.status === 0) {
           return '休息中'
         }
         if (this.totalPrice === 0) {
-          return `￥${this.minPrice}元起送`
-        } else if (this.totalPrice < this.minPrice) {
-          let diff = this.minPrice - this.totalPrice
+          return `￥${this.seller.minPrice}元起送`
+        } else if (this.totalPrice < this.seller.minPrice) {
+          let diff = this.seller.minPrice - this.totalPrice
           return `还差￥${diff}元起送`
         } else {
           return '去结算'
         }
       },
       payClass() {
-        if (this.sellerStatus === 0) {
+        if (this.seller.status === 0) {
           return 'not-enough'
         }
-        if (this.totalPrice < this.minPrice) {
+        if (this.totalPrice < this.seller.minPrice) {
           return 'not-enough'
         } else {
           return 'enough'
@@ -174,6 +167,25 @@
         return show
       }
     },
+    watch: {
+      'seller'() {
+        console.log('监听父组件传值的变化')
+        console.log(this.seller)
+      }
+    },
+    created() {
+      console.log(this.seller)
+      if (JSON.stringify(this.seller) === '{}') {
+        console.log('shopcart强制刷新')
+        this.shopId = getStorageSync('shopId', 0)
+        this.$http.get('/api/seller').then((response) => {
+          response = response.body
+          if (response.errno === ERR_OK) {
+            this.shop = response.data
+          }
+        })
+      }
+    },
     methods: {
       drop(el) {
         for (let i = 0; i < this.balls.length; i++) {
@@ -190,7 +202,7 @@
         // if (!event._constructed) {
         //   return
         // }
-        if (this.sellerStatus === 0 || this.totalPrice < this.minPrice) {
+        if (this.seller.status === 0 || this.totalPrice < this.seller.minPrice) {
           return
         }
         this.$refs.orderdetail.show()
@@ -240,7 +252,7 @@
       emptyCart() {
         this.selectFoods.forEach((food) => {
           food.count = 0
-          saveToLocal(this.sellerId, food.id, 'count', 0)
+          saveToLocal(this.seller.id, food.id, 'count', 0)
         })
       },
       hidelist() {

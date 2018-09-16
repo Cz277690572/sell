@@ -31,7 +31,9 @@
         selectedShop: {}
       }
     },
-    created() {},
+    created() {
+      EchoUrl()
+    },
     watch: {
       'shops'() {
         this.$nextTick(() => {
@@ -51,12 +53,10 @@
     methods: {
       _initScroll() {
         if (!this.scroll) {
-          EchoUrl()
           this.scroll = new BScroll(this.$refs.shops, {
             click: true
           })
         } else {
-          EchoUrl()
           this.scroll.refresh()
         }
       },
@@ -65,8 +65,6 @@
           return
         }
         this.$emit('goShop', shop)
-        // console.log(shop)
-        // this.$router.push({path: '/goods'})
       }
     }
   }
