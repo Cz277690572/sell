@@ -61,7 +61,7 @@
   import {saveToLocal} from '../../common/js/cart'
   import BScroll from 'better-scroll'
   import orderdetail from '../orderdetail/orderdetail'
-  import {getStorageSync} from '../../common/js/base'
+  import {Base} from '../../common/js/base'
   const ERR_OK = 0
   export default {
     components: {
@@ -177,7 +177,7 @@
       console.log(this.seller)
       if (JSON.stringify(this.seller) === '{}') {
         console.log('shopcart强制刷新')
-        this.shopId = getStorageSync('shopId', 0)
+        this.shopId = (new Base()).getStorageSync('shopId', 0)
         this.$http.get('/api/seller').then((response) => {
           response = response.body
           if (response.errno === ERR_OK) {

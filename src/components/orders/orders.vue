@@ -37,7 +37,7 @@
 <script>
   import BScroll from 'better-scroll'
   import orderdetail from '../orderdetail/orderdetail'
-  import {getStorageSync} from '../../common/js/base'
+  import {Base} from '../../common/js/base'
   const ERR_OK = 0
   export default {
     components: {
@@ -62,7 +62,7 @@
       // 不是读取缓存中的shopId
       if (JSON.stringify(this.seller) === '{}') {
         console.log('orders强制刷新')
-        this.shopId = getStorageSync('shopId', 0)
+        this.shopId = (new Base()).getStorageSync('shopId', 0)
         this.$http.get('/api/seller').then((response) => {
           response = response.body
           if (response.errno === ERR_OK) {
