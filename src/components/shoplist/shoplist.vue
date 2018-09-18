@@ -22,7 +22,6 @@
 
 <script>
   import BScroll from 'better-scroll'
-  import {EchoUrl} from '../../common/js/base'
   const ERR_OK = 0
   export default {
     data() {
@@ -32,7 +31,6 @@
       }
     },
     created() {
-      EchoUrl()
     },
     watch: {
       'shops'() {

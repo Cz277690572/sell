@@ -18,7 +18,7 @@
 
 <script>
   import header from '../header/header.vue'
-  import {setStorageSync, getStorageSync} from '../../common/js/base'
+  import {Base} from '../../common/js/base'
   const ERR_OK = 0
   export default {
     props: {
@@ -40,8 +40,9 @@
       // 是重置this.shop.id
       // 不是读取缓存中的this.shop.id
       if (JSON.stringify(this.shop) !== '{}') {
-        this.shopId = this.shop.id
-        setStorageSync('shopId', this.shopId)
+        this.shopId = this.shop.id;
+        // let Base = new Base()
+        (new Base()).setStorageSync('shopId', this.shopId)
         console.log('shop不是强制刷新,设置缓存')
         this.$http.get('/api/seller').then((response) => {
           response = response.body
@@ -50,7 +51,7 @@
           }
         })
       } else {
-        this.shopId = getStorageSync('shopId', 0)
+        this.shopId = (new Base()).getStorageSync('shopId', 0)
         console.log('shop强制刷新,读取缓存')
         this.$http.get('/api/seller').then((response) => {
           response = response.body

@@ -8,6 +8,7 @@
 <script>
   import shop from './components/shop/shop'
   import shopList from './components/shoplist/shoplist'
+  import {Base} from './common/js/base'
 
   export default {
     components: {
@@ -53,6 +54,13 @@
       }
     },
     created() {
+      // let params = {
+      //   url: 'wap/location/getshops',
+      //   data: {}
+      // }
+      let base = new Base()
+      base.echo('test')
+      // base.request(params)
     },
     methods: {
       shopShow(seller) {
