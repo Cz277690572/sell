@@ -8,7 +8,7 @@
         <div class="order-main">
           <div class="order-left">
             <img width="57px" height="57px"
-                 src="http://fuss10.elemecdn.com/8/71/c5cf5715740998d5040dda6e66abfjpeg.jpeg?imageView2/1/w/180/h/180">
+                 src="{{item.order_logo}}">
           </div>
           <div class="order-middle">
             <div class="order-desc">{{item.desc}}</div>
