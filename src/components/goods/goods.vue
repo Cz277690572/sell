@@ -5,7 +5,7 @@
         <li v-for="(item, index) in goods" :key="index" class="menu-item"
             :class="{'current':currentIndex===index}" @click="selMenu(index,$event)">
           <span class="text border-1px">
-            <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
+            {{item.name}}
           </span>
         </li>
       </ul>
@@ -22,12 +22,12 @@
               <div class="content">
                 <h2 class="name">{{food.name}}</h2>
                 <p class="desc">{{food.description}}</p>
-                <div class="extra">
-                  <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
-                </div>
+                <!--<div class="extra">-->
+                  <!--<span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>-->
+                <!--</div>-->
                 <div class="price">
-                  <span class="now">￥{{food.price}}</span><span class="old"
-                                                                v-show="food.oldPrice">￥{{food.oldPrice}}</span>
+                  <span class="now">￥{{food.price}}</span>
+                  <!--<span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>-->
                 </div>
                 <div class="cartcontrol-wrapper">
                   <cartcontrol v-if="_checkShop(shop)" :food="food" :seller-id="shop.id" v-on:cart-add="cartAdd"></cartcontrol>
@@ -38,11 +38,7 @@
         </li>
       </ul>
     </div>
-    <shopcart v-if="_checkShop(shop)" ref="shopcart" :selectFoods="selectFoods" :seller="shop"
-              :seller-status="seller.status"
-              :seller-id="seller.id  || 1" :delivery-price="seller.deliveryPrice"
-              :min-price="seller.minPrice"
-    ></shopcart>
+    <shopcart v-if="_checkShop(shop)" ref="shopcart" :selectFoods="selectFoods" :seller="shop"></shopcart>
   </div>
 </template>
 
@@ -124,7 +120,6 @@
         }
       },
       _loadData() {
-        this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
         this.$http.get('/api/goods').then((response) => {
           response = response.body
           if (response.errno === ERR_OK) {

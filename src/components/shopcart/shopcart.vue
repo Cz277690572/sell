@@ -77,10 +77,6 @@
       },
       seller: {
         type: Object
-      },
-      deliveryPrice: {
-        type: Number,
-        default: 0
       }
     },
     data() {
@@ -128,9 +124,9 @@
           return '休息中'
         }
         if (this.totalPrice === 0) {
-          return `￥${this.seller.minPrice}元起送`
-        } else if (this.totalPrice < this.seller.minPrice) {
-          let diff = this.seller.minPrice - this.totalPrice
+          return `￥${this.seller.start_price}元起送`
+        } else if (this.totalPrice < this.seller.start_price) {
+          let diff = this.seller.start_price - this.totalPrice
           return `还差￥${diff}元起送`
         } else {
           return '去结算'
@@ -140,7 +136,7 @@
         if (this.seller.status === 0) {
           return 'not-enough'
         }
-        if (this.totalPrice < this.seller.minPrice) {
+        if (this.totalPrice < this.seller.start_price) {
           return 'not-enough'
         } else {
           return 'enough'
@@ -165,12 +161,6 @@
           })
         }
         return show
-      }
-    },
-    watch: {
-      'seller'() {
-        console.log('监听父组件传值的变化')
-        console.log(this.seller)
       }
     },
     created() {
@@ -202,7 +192,7 @@
         // if (!event._constructed) {
         //   return
         // }
-        if (this.seller.status === 0 || this.totalPrice < this.seller.minPrice) {
+        if (this.seller.status === 0 || this.totalPrice < this.seller.start_price) {
           return
         }
         this.$refs.orderdetail.show()

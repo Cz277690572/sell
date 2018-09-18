@@ -5,28 +5,24 @@
     </div>
     <div class="content-wrapper">
       <div class="avatar">
-        <img width="64" height="64" :src="seller.avatar">
+        <img width="64" height="64" :src="seller.logo">
       </div>
       <div class="content">
         <div class="title">
           <span class="brand"></span>
-          <span class="name">{{seller.name}}</span>
+          <span class="name">{{seller.title}}</span>
         </div>
         <div class="description">
-          {{seller.description}}/{{seller.deliveryTime}}分钟送达
-        </div>
-        <div v-if="seller.supports" class="support">
-          <span class="icon"></span>
-          <span class="text">{{seller.supports[0].description}}</span>
+          {{seller.delivery_desc}}/{{seller.delivery_time}}分钟送达
         </div>
       </div>
     </div>
     <div class="bulletin-wrapper" @click="showDetail">
-      <span class="bulletin-title"></span><span class="bulletin-text">{{seller.desc}}</span>
+      <span class="bulletin-title"></span><span class="bulletin-text">{{seller.content || '暂无公告'}}</span>
       <i class="icon-keyboard_arrow_right"></i>
     </div>
     <div class="background">
-      <img :src="seller.avatar" width="100%" height="100%"/>
+      <img :src="seller.logo" width="100%" height="100%"/>
     </div>
     <transition name="fade">
       <div v-show="detailShow" class="detail">
@@ -39,7 +35,7 @@
             <div class="line"></div>
           </div>
           <div class="bulletin">
-            <p class="content">{{seller.desc}}</p>
+            <p class="content">{{seller.content || '暂无公告'}}</p>
           </div>
         </div>
       </div>

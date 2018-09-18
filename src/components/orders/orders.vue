@@ -8,11 +8,11 @@
         <div class="order-main">
           <div class="order-left">
             <img width="57px" height="57px"
-                 src="{{item.order_logo}}">
+                 :src="item.order_logo">
           </div>
           <div class="order-middle">
-            <div class="order-desc">{{item.desc}}</div>
-            <div class="order-count">{{item.count}}件商品</div>
+            <div class="order-desc">{{item.order_title}}</div>
+            <div class="order-count">{{item.goods_count}}件商品</div>
           </div>
           <div class="order-right">
             <span v-show="item.status == '待付款'" class="order-status unpay">{{item.status}}</span>
@@ -21,7 +21,7 @@
           </div>
         </div>
         <div class="order-bottom">
-          <div class="desc">实付￥{{item.pay}}元</div>
+          <div class="desc">实付￥{{item.pay_price}}元</div>
           <div class="pay" v-show="item.status == '待付款'">付款</div>
           <div class="confirm" v-show="item.status == '已发货'">确认收货</div>
           <div class="complete" v-show="item.status == '订单已完成' || item.status == '已收货'">订单已完成</div>

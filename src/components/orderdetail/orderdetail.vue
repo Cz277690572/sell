@@ -158,7 +158,7 @@
         if (this.seller.status === 0) {
           return 'not-enough'
         }
-        if (this.totalPrice < this.seller.minPrice) {
+        if (this.totalPrice < this.seller.start_price) {
           return 'not-enough'
         } else {
           return 'enough'
@@ -262,9 +262,9 @@
           this.payDesc = '休息中'
         }
         if (this.totalPrice === 0) {
-          this.payDesc = `￥${this.seller.minPrice}元起送`
-        } else if (this.totalPrice < this.seller.minPrice) {
-          let diff = this.seller.minPrice - this.totalPrice
+          this.payDesc = `￥${this.seller.start_price}元起送`
+        } else if (this.totalPrice < this.seller.start_price) {
+          let diff = this.seller.start_price - this.totalPrice
           this.payDesc = `还差￥${diff}元起送`
         } else {
           this.payDesc = '去支付'
