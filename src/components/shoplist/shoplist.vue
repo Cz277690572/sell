@@ -22,7 +22,8 @@
 
 <script>
   import BScroll from 'better-scroll'
-  const ERR_OK = 0
+  import {Base} from '../../common/js/base'
+  // const ERR_OK = 0
   export default {
     data() {
       return {
@@ -40,13 +41,26 @@
       }
     },
     mounted() {
-      this.$http.get('/api/shops').then((response) => {
-        response = response.body
-        if (response.errno === ERR_OK) {
-          this.shops = response.data
-          this._initScroll()
+      let params = {
+        url: 'wap/location/getshops',
+        type: 'GET',
+        data: {},
+        sCallback: function (data) {
+          // 请求成功进行数据渲染
+        },
+        eCallback: function () {
+          // 请求失败弹框告知失败原因
         }
-      })
+      }
+      let base = new Base()
+      base.request(params)
+      // this.$http.get('/api/shops').then((response) => {
+      //   response = response.body
+      //   if (response.errno === ERR_OK) {
+      //     this.shops = response.data
+      //     this._initScroll()
+      //   }
+      // })
     },
     methods: {
       _initScroll() {

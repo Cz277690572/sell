@@ -1,13 +1,14 @@
-import {Config} from 'config.js'
+import {Config} from './config'
 
 class Token {
   constructor() {
     // 校验token令牌是否过期,过期更新，有效不作处理
-    this.verifyUrl = Config.restUrl + 'token/verify'
+    this.verifyUrl = Config.restUrl + 'wap/token/verify'
     // 获取token令牌
     this.tokenUrl = Config.restUrl + 'wap/token/getToken'
   }
 
+  // 令牌校验方法
   verify() {
     let token = window.localStorage.getItem('token')
     if (!token) {
@@ -23,9 +24,11 @@ class Token {
     let params = {'token': token}
     let url = '/api/seller'
     that.$http.get(url, params)
-    .then((response) => {
-      if (response.code === 0) {
+    .then((res) => {
+      if (res.code === 0) {
         that.getTokenFromServer()
+      } else {
+        console.log('有效token')
       }
     })
     .catch((res) => {
