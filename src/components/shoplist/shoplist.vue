@@ -43,12 +43,12 @@
     mounted() {
       let params = {
         url: 'wap/location/getshops',
-        type: 'GET',
-        data: {},
+        type: 'get',
+        data: {'id': '123'},
         sCallback: function (data) {
           // 请求成功进行数据渲染
         },
-        eCallback: function () {
+        eCallback: function (data) {
           // 请求失败弹框告知失败原因
         }
       }

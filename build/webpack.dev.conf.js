@@ -14,8 +14,9 @@ const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
 // 模拟后台数据请求
-// const express = require('express')
-// const app = express()  // 请求server
+const express = require('express')
+const app = express()  // 请求server
+
 // var appData = require('../data.json') // 加载本地数据文件
 // var shops = appData.shops
 // var seller = appData.seller  // 获取对应的本地数据

@@ -1,5 +1,5 @@
 class Config {
 }
 
-Config.restUrl = 'http://ruwei.com/'
+Config.restUrl = 'http://www.xialangschool.cn/'
 export {Config}
