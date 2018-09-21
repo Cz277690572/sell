@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import VueResource from 'vue-resource'
+import AXIOS from './common/js/http'
 
 import shopList from './components/shoplist/shoplist'
 import goods from './components/goods/goods'
@@ -13,11 +14,13 @@ import seller from './components/seller/seller'
 // import router from './router'
 
 import VueRouter from 'vue-router' // 引入路由组件
+
 // 注册路由
 Vue.use(VueRouter)
 // 注册VueResource
 Vue.use(VueResource)
 Vue.config.productionTip = false
+Object.defineProperty(Vue.prototype, '$axios', { value: AXIOS })
 
 const routes = [
   {path: '/shopList', name: 'shopList', component: shopList},

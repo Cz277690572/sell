@@ -22,16 +22,44 @@
 
 <script>
   import BScroll from 'better-scroll'
-  import {Base} from '../../common/js/base'
+  // import {Base} from '../../common/js/base'
   // const ERR_OK = 0
+
   export default {
     data() {
       return {
         shops: {},
-        selectedShop: {}
+        selectedShop: {},
+        token: null
       }
     },
     created() {
+      new Promise((resolve, reject) => {
+        // 不传token， 默认送空
+        this.$axios.get('/wap/token/getToken?code=111111').then((res) => {
+          if (res.msg === 'success') {
+              resolve(res)
+            } else {
+              reject(res)
+            }
+          })
+      })
+      .then((data) => {
+        this.token = data.token
+        // 附带token
+        this.$axios.get('/wap/location/getshops', {token: this.token}).then((res) => {
+          console.log(res)
+        })
+        // post
+        var params = {
+          username: 'kite',
+          phone: '10086',
+          address: '103'
+        }
+        this.$axios.post('/wap/order/placeorder', params, {token: this.token}).then((res) => {
+          console.log(res)
+        })
+      })
     },
     watch: {
       'shops'() {
@@ -41,19 +69,19 @@
       }
     },
     mounted() {
-      let params = {
-        url: 'wap/location/getshops',
-        type: 'get',
-        data: {'id': '123'},
-        sCallback: function (data) {
-          // 请求成功进行数据渲染
-        },
-        eCallback: function (data) {
-          // 请求失败弹框告知失败原因
-        }
-      }
-      let base = new Base()
-      base.request(params)
+      // let params = {
+      //   url: 'fps/api/start/token',
+      //   type: 'get',
+      //   data: {'id': '123'},
+      //   sCallback: function (data) {
+      //     // 请求成功进行数据渲染
+      //   },
+      //   eCallback: function (data) {
+      //     // 请求失败弹框告知失败原因
+      //   }
+      // }
+      // let base = new Base()
+      // base.request(params)
       // this.$http.get('/api/shops').then((response) => {
       //   response = response.body
       //   if (response.errno === ERR_OK) {

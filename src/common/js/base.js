@@ -12,7 +12,8 @@ class Base {
     let token = '1111111111111'
     axios({
       headers: {
-        'token': token
+        'token': token,
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
       method: params.type,
       url: url,
