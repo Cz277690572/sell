@@ -28,7 +28,7 @@
       <div v-show="detailShow" class="detail">
       <div class="detail-wrapper">
         <div class="detail-main">
-          <h1 class="name">{{seller.name}}</h1>
+          <h1 class="name">{{seller.title}}</h1>
           <div class="title">
             <div class="line"></div>
             <div class="text">商家公告</div>

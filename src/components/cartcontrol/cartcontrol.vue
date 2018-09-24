@@ -20,7 +20,6 @@
         type: Object
       },
       sellerId: {
-        type: Number,
         default: 0
       }
     },

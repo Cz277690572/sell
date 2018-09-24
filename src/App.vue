@@ -38,7 +38,6 @@
     },
     beforeMount() {
       const thisUrl = this.$route.path
-      console.log(thisUrl)
       if (thisUrl === '/goods') {
         this.isShowShop = true
         this.$router.push({path: '/goods'})
@@ -49,6 +48,10 @@
         this.isShowShop = true
         this.$router.push({path: '/seller'})
       } else {
+        let token = this.$route.query.token
+        if (token) {
+          window.localStorage.setItem('token', '0495e60cae94441146980e5065b955c7')
+        }
         this.isShowShop = false
       }
     },

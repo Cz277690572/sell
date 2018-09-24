@@ -1,11 +1,11 @@
 <template>
   <div class="order" ref="order">
-    <div class="order-wrapper">
-      <div class="order-item" v-for="(item, index) in orders" :key="index" @click="orderdetail(item.id, $event)">
-        <div class="order-header">
+    <div v-if="orders.length > 0" class="order-wrapper">
+      <div class="order-item" v-for="(item, index) in orders" :key="index">
+        <div class="order-header"  @click="_detailShow(item.id, $event)">
           <span>订单编号:</span><span class="order-no">{{item.order_no}}</span>
         </div>
-        <div class="order-main">
+        <div class="order-main"  @click="_detailShow(item.id, $event)">
           <div class="order-left">
             <img width="57px" height="57px"
                  :src="item.order_logo">
@@ -15,30 +15,32 @@
             <div class="order-count">{{item.goods_count}}件商品</div>
           </div>
           <div class="order-right">
-            <span v-show="item.status == '待付款'" class="order-status unpay">{{item.status}}</span>
+            <span v-show="item.status == '未支付'" class="order-status unpay">{{item.status}}</span>
             <span v-show="item.status == '已付款'" class="order-status payed">等待商家发货</span>
             <span v-show="item.status == '已发货'" class="order-status done">已发货</span>
           </div>
         </div>
         <div class="order-bottom">
           <div class="desc">实付￥{{item.pay_price}}元</div>
-          <div class="pay" v-show="item.status == '待付款'">付款</div>
-          <div class="confirm" v-show="item.status == '已发货'">确认收货</div>
-          <div class="complete" v-show="item.status == '订单已完成' || item.status == '已收货'">订单已完成</div>
-          <div class="shut" v-show="item.status == '订单已失效'">订单已失效</div>
+          <div class="pay" @click="_detailShow(item.id, $event)" v-show="item.status == '未支付'">付款</div>
+          <div class="confirm" @click="_confirm(index, item.id)" v-show="item.status == '已发货'">确认收货</div>
+          <div class="complete" @click="_detailShow(item.id, $event)" v-show="item.status == '订单已完成' || item.status == '已收货'">订单已完成</div>
+          <div class="shut" @click="_detailShow(item.id, $event)" v-show="item.status == '订单已失效'">订单已失效</div>
         </div>
         <div class="split"></div>
       </div>
     </div>
-    <orderdetail v-if="_checkShop(shop)" :orderId="orderId" :from="from" :seller="shop" :sellerStatus="seller.status" :minPrice="seller.minPrice" v-on:loadorder="_loadData" ref="orderdetail"></orderdetail>
+    <div v-if="!orderCount" class="no-orders" @click="_goGoods">
+      <span>没有订单数据，去下了一个吧~</span>
+    </div>
+    <orderdetail v-if="_checkShop(shop)" :from="from" :seller="shop" :sellerStatus="seller.status" :minPrice="seller.minPrice" v-on:loadorder="_loadData" ref="orderdetail"></orderdetail>
   </div>
 </template>
 
 <script>
   import BScroll from 'better-scroll'
   import orderdetail from '../orderdetail/orderdetail'
-  import {Base} from '../../common/js/base'
-  const ERR_OK = 0
+  import {getStorageSync} from '../../common/js/base'
   export default {
     components: {
       'orderdetail': orderdetail
@@ -53,21 +55,23 @@
         shop: {},
         orders: [],
         from: 'order',
-        orderId: 0
+        orderCount: true
       }
     },
     created() {
+      console.log(this.orders)
       // 判断缓父组件是否传来this.seller
       // 是不做处理
       // 不是读取缓存中的shopId
       if (JSON.stringify(this.seller) === '{}') {
         console.log('orders强制刷新')
-        this.shopId = (new Base()).getStorageSync('shopId', 0)
-        this.$http.get('/api/seller').then((response) => {
-          response = response.body
-          if (response.errno === ERR_OK) {
-            this.shop = response.data
+        this.shopId = getStorageSync('shopId')
+        this.$axios.get('/wap/location/getshopbyid.html?id=' + this.shopId).then((res) => {
+          if (res.code === 1) {
+            this.shop = res.data
             this._loadData()
+          } else {
+            console.log(res)
           }
         })
       } else {
@@ -85,14 +89,15 @@
         }
       },
       _loadData() {
-        this.$http.get('/api/orders').then((response) => {
-          response = response.body
-          if (response.errno === ERR_OK) {
-            this.orders = response.data
-            console.log(this.orders)
+        this.$axios.get('/wap/order/getOrders.html?id=' + this.shop.id).then((res) => {
+          if (res.code === 1) {
+            this.orders = res.data
             this.$nextTick(() => {
               this._initScroll()
             })
+          } else {
+            this.orderCount = false
+            console.log(res)
           }
         })
       },
@@ -101,13 +106,32 @@
           click: true
         })
       },
-      orderdetail(id, event) {
+      _detailShow(id, event) {
         if (!event._constructed) {
           return
         }
-        console.log(id)
-        this.orderId = id
-        this.$refs.orderdetail.show()
+        this.$refs.orderdetail.show(id)
+      },
+      _goGoods() {
+        this.$router.push({path: '/goods'})
+      },
+      _confirm(index, orderId) {
+        if (confirm('确认收货吗？')) {
+          console.log(orderId)
+          let params = {
+            id: orderId
+          }
+          this.$axios.post('wap/order/receive', params).then((res) => {
+            console.log(res)
+            if (res.code === 1) {
+              this.orders[index].status = '已收货'
+            } else {
+              alert('刷新重试！')
+            }
+          })
+        } else {
+          return false
+        }
       }
     }
   }
@@ -182,8 +206,20 @@
         .confirm
           background-color: #00b43c
           border-radius: 4px
+        .complete
+          color: #57ab53
+        .shut
+          color: #b42f2d
+          text-decoration: line-through
       .split
         width: 100%
         height: 8px
         background: #f3f5f7
+    .no-orders
+      padding-top: 174px
+      line-height: 36px
+      font-size: 16px
+      color: #00a0dc
+      text-align: center
+      text-decoration: underline
 </style>

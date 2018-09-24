@@ -19,7 +19,7 @@
           </div>
           <div class="order-status">
             <span v-show="order.status=='未支付'" class="unpay">未支付</span>
-            <span v-show="order.status=='已支付'" class="payed">等待商家发货</span>
+            <span v-show="order.status=='已付款'" class="payed">等待商家发货</span>
             <span v-show="order.status=='已发货'" class="done">已发货</span>
             <span v-show="order.status=='订单已完成' || order.status=='已收货'" class="complete">订单已完成</span>
             <span v-show="order.status=='订单已失效'" class="shut">订单已失效</span>
@@ -38,6 +38,9 @@
           </div>
           <div class="address">
             <span>{{order.express_address}}</span>
+          </div>
+          <div class="desc">
+            <span>{{order.desc}}</span>
           </div>
         </div>
       </div>
@@ -70,7 +73,7 @@
           </div>
         </div>
       </div>
-      <div class="order-account" v-show="orderStatus=='未支付'">
+      <div class="order-account" v-show="orderStatus">
         <div class="total-count">付款合计: ￥{{totalPrice}}</div>
         <div class="to-pay" @click="checkPay" :class="payClass">{{payDesc}}</div>
       </div>
@@ -119,7 +122,7 @@
 <script>
   import BScroll from 'better-scroll'
   import {saveToLocal} from '../../common/js/cart'
-  const ERR_OK = 0
+
   export default {
     props: {
       seller: {
@@ -131,7 +134,6 @@
           return []
         }
       },
-      orderId: 0,
       from: ''
     },
     data() {
@@ -146,7 +148,7 @@
         payDesc: '',
         goods: [],
         order: {},
-        orderStatus: '未支付',
+        orderStatus: false,
         payShow: false,
         payRes: ''
       }
@@ -166,14 +168,14 @@
       }
     },
     methods: {
-      show() {
+      show(orderId = 0) {
         this.showFlag = true
         this.totalPrice = 0
         if (this.from === 'cart') {
-          this.$http.get('/api/address').then((response) => {
-            response = response.body
-            if (response.errno === ERR_OK) {
-              this.receipt = response.data
+          this.orderStatus = true
+          this.$axios.get('/wap/member/getaddress.html').then((res) => {
+            if (res.code === 1) {
+              this.receipt = res.data
             }
           })
           this.goods = this.cartGoods
@@ -185,21 +187,24 @@
           })
           this._payDesc()
         } else if (this.from === 'order') {
-          this.$http.get('/api/orderdetail').then((response) => {
-            response = response.body
-            this.order = response.data
-            this.goods = this.order.goodsList
-            this.goods.forEach((item) => {
-              this.totalPrice += item['price'] * item['count']
-            })
-            this.$nextTick(() => {
-              this._initScroll()
-            })
-            if (this.order.status !== '未支付') {
-              this.orderStatus = this.order.status
-            } else {
-              this._payDesc()
-            }
+          this.orderStatus = false
+          this.$axios.get('/wap/order/getDetail.html?id=' + orderId).then((res) => {
+              if (res.code === 1) {
+                this.order = res.data
+                this.goods = this.order.goodsList
+                this.goods.forEach((item) => {
+                  this.totalPrice += item['price'] * item['count']
+                })
+                this.$nextTick(() => {
+                  this._initScroll()
+                })
+                if (this.order.status === '未支付') {
+                  this.orderStatus = true
+                  this._payDesc()
+                }
+              } else {
+                console.log(res)
+              }
           })
         }
       },
@@ -228,10 +233,28 @@
           alert('收货地址不能为空！')
           return
         }
-        console.log('提交参数审核通过，提交订单;返回订单id,清空购物车,提交订单id，拉起微信支付，返回支付结果, 跳转至支付结果')
+        let params = {
+          username: this.username,
+          phone: this.phone,
+          address: this.address,
+          desc: this.desc,
+          goods: []
+        }
+        this.goods.forEach((item) => {
+          params.goods.push({goods_id: item.id, count: item.count})
+        })
+        this.$axios.post('/wap/order/placeorder', params).then((res) => {
+          console.log(res)
+          if (res.code === 1) {
+            this.payShow = true
+            this.payRes = 'success'
+          } else {
+          }
+        })
+        // console.log('提交参数审核通过，提交订单;返回订单id,清空购物车,提交订单id，拉起微信支付，返回支付结果, 跳转至支付结果')
         // 求参数{"username":"阿猫","phone":"15220501265","address":"2栋622","desc":"不要加辣","goods":[{"goods_id":"2","count":"2"},{"goods_id":"1","count":"1"}]}
-        this.payShow = true
-        this.payRes = 'success'
+        // this.payShow = true
+        // this.payRes = 'success'
       },
       _goBack() {
         if (this.from === 'cart') {
@@ -328,13 +351,13 @@
         display: flex
         border-1px(rgba(7, 17, 27, 0.1))
         .order-time-no
-          flex: 1
+          flex: 0 0 230px
           line-height: 36px
           .order-time, .order-no
             .text
               color: #333
         .order-status
-          flex: 0 0 64px
+          flex: 1
           line-height: 72px
           text-align: right
           .unpay, .shut

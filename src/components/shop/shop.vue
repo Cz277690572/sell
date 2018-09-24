@@ -18,8 +18,7 @@
 
 <script>
   import header from '../header/header.vue'
-  import {Base} from '../../common/js/base'
-  const ERR_OK = 0
+  import {setStorageSync, getStorageSync} from '../../common/js/base'
   export default {
     props: {
       shop: {
@@ -40,23 +39,24 @@
       // 是重置this.shop.id
       // 不是读取缓存中的this.shop.id
       if (JSON.stringify(this.shop) !== '{}') {
-        this.shopId = this.shop.id;
-        // let Base = new Base()
-        (new Base()).setStorageSync('shopId', this.shopId)
         console.log('shop不是强制刷新,设置缓存')
-        this.$http.get('/api/seller').then((response) => {
-          response = response.body
-          if (response.errno === ERR_OK) {
-            this.seller = response.data
+        this.shopId = this.shop.id
+        setStorageSync('shopId', this.shopId)
+        this.$axios.get('/wap/location/getshopbyid.html?id=' + this.shopId).then((res) => {
+          if (res.code === 1) {
+            this.seller = res.data
+          } else {
+            console.log(res)
           }
         })
       } else {
-        this.shopId = (new Base()).getStorageSync('shopId', 0)
         console.log('shop强制刷新,读取缓存')
-        this.$http.get('/api/seller').then((response) => {
-          response = response.body
-          if (response.errno === ERR_OK) {
-            this.seller = response.data
+        this.shopId = getStorageSync('shopId')
+        this.$axios.get('/wap/location/getshopbyid.html?id=' + this.shopId).then((res) => {
+          if (res.code === 1) {
+            this.seller = res.data
+          } else {
+            console.log(res)
           }
         })
       }

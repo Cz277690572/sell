@@ -1,65 +1,50 @@
 <template>
   <div class="shoplist">
     <div class="title">请选择商家</div>
-    <div class="shops" ref="shops">
+    <div v-if="showShops" class="shops" ref="shops">
       <div class="shops-wrapper">
         <div class="shop-item" v-for="(item, index) in shops" :key="index" @click="selectShop(item,$event)">
           <div class="shop-left">
-            <img width="64px" height="64px" :src="item.avatar">
+            <img width="64px" height="64px" :src="item.logo">
           </div>
           <div class="shop-right">
             <div class="shop-name">{{item.name}}</div>
             <div class="shop-status">状态: <span class="close" :class="{on:item.status=='营业中'}">{{item.status}}</span>
             </div>
             <div class="shop-desc">说明: {{item.desc}}</div>
-            <div class="shop-minPrice">起送价{{item.minPrice}}元 <span class="modifier">|</span> 免配送费</div>
+            <div class="shop-minPrice">起送价{{item.start_price}}元 <span class="modifier">|</span> 免配送费</div>
           </div>
         </div>
       </div>
+    </div>
+    <div v-if="!showShops" class="no-shops">
+      <span>商家还未入驻，敬请期待！</span>
     </div>
   </div>
 </template>
 
 <script>
   import BScroll from 'better-scroll'
-  // import {Base} from '../../common/js/base'
-  // const ERR_OK = 0
-
   export default {
     data() {
       return {
+        showShops: true,
         shops: {},
         selectedShop: {},
         token: null
       }
     },
     created() {
-      new Promise((resolve, reject) => {
-        // 不传token， 默认送空
-        this.$axios.get('/wap/token/getToken?code=111111').then((res) => {
-          if (res.msg === 'success') {
-              resolve(res)
-            } else {
-              reject(res)
-            }
-          })
-      })
-      .then((data) => {
-        this.token = data.token
-        // 附带token
-        this.$axios.get('/wap/location/getshops', {token: this.token}).then((res) => {
+        this.$axios.get('/wap/location/getshops').then((res) => {
           console.log(res)
+          if (res.code === 1) {
+            this.shops = res.data
+            this._initScroll()
+          } else {
+            this.showShops = false
+            console.log(res)
+          }
         })
-        // post
-        var params = {
-          username: 'kite',
-          phone: '10086',
-          address: '103'
-        }
-        this.$axios.post('/wap/order/placeorder', params, {token: this.token}).then((res) => {
-          console.log(res)
-        })
-      })
     },
     watch: {
       'shops'() {
@@ -69,19 +54,6 @@
       }
     },
     mounted() {
-      // let params = {
-      //   url: 'fps/api/start/token',
-      //   type: 'get',
-      //   data: {'id': '123'},
-      //   sCallback: function (data) {
-      //     // 请求成功进行数据渲染
-      //   },
-      //   eCallback: function (data) {
-      //     // 请求失败弹框告知失败原因
-      //   }
-      // }
-      // let base = new Base()
-      // base.request(params)
       // this.$http.get('/api/shops').then((response) => {
       //   response = response.body
       //   if (response.errno === ERR_OK) {
@@ -156,4 +128,12 @@
             .shop-minPrice
               .modifier
                 color: rgba(1, 17, 27, 0.3)
+    .no-shops
+      position: absolute
+      width: 100%
+      top: 100px
+      left: 0
+      bottom: 9px
+      font-size: 18px
+      text-align: center
 </style>

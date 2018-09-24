@@ -61,8 +61,7 @@
   import {saveToLocal} from '../../common/js/cart'
   import BScroll from 'better-scroll'
   import orderdetail from '../orderdetail/orderdetail'
-  import {Base} from '../../common/js/base'
-  const ERR_OK = 0
+  // import {getStorageSync} from '../../common/js/base'
   export default {
     components: {
       'cartcontrol': cartcontrol,
@@ -81,7 +80,7 @@
     },
     data() {
       return {
-        shop: {},
+        // shop: {},
         balls: [
           {
             show: false
@@ -164,17 +163,17 @@
       }
     },
     created() {
-      console.log(this.seller)
-      if (JSON.stringify(this.seller) === '{}') {
-        console.log('shopcart强制刷新')
-        this.shopId = (new Base()).getStorageSync('shopId', 0)
-        this.$http.get('/api/seller').then((response) => {
-          response = response.body
-          if (response.errno === ERR_OK) {
-            this.shop = response.data
-          }
-        })
-      }
+      // if (JSON.stringify(this.seller) === '{}') {
+      //   console.log('逻辑上不会走shopcart强制刷新')
+      //   this.shopId = getStorageSync('shopId', 0)
+      //   this.$axios.get('/wap/location/getshopbyid.html?id=' + this.shopId).then((res) => {
+      //     if (res.code === 1) {
+      //       this.shop = res.data
+      //     } else {
+      //       console.log(res)
+      //     }
+      //   })
+      // }
     },
     methods: {
       drop(el) {

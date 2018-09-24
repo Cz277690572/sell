@@ -46,9 +46,7 @@
   import BScroll from 'better-scroll'
   import shopcart from '../shopcart/shopcart'
   import cartcontrol from '../cartcontrol/cartcontrol'
-  import {Base} from '../../common/js/base'
-
-  const ERR_OK = 0
+  import {getStorageSync} from '../../common/js/base'
 
   export default {
     components: {
@@ -97,12 +95,13 @@
       // 不是读取缓存中的shopId
       if (JSON.stringify(this.seller) === '{}') {
         console.log('goods强制刷新')
-        this.shopId = (new Base()).getStorageSync('shopId', 0)
-        this.$http.get('/api/seller').then((response) => {
-          response = response.body
-          if (response.errno === ERR_OK) {
-            this.shop = response.data
+        this.shopId = getStorageSync('shopId')
+        this.$axios.get('/wap/location/getshopbyid.html?id=' + this.shopId).then((res) => {
+          if (res.code === 1) {
+            this.shop = res.data
             this._loadData()
+          } else {
+            console.log(res)
           }
         })
       } else {
@@ -120,14 +119,16 @@
         }
       },
       _loadData() {
-        this.$http.get('/api/goods').then((response) => {
-          response = response.body
-          if (response.errno === ERR_OK) {
-            this.goods = response.data
+        this.$axios.get('/wap/goods/getgoodsbyshop.html?id=' + this.shop.id).then((res) => {
+          console.log(res)
+          if (res.code === 1) {
+            this.goods = res.data
             this.$nextTick(() => {
               this._initScroll()
               this._calculateHeight()
             })
+          } else {
+            console.log(res)
           }
         })
       },
