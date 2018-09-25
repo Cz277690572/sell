@@ -7,7 +7,7 @@
         </div>
         <div class="order-main"  @click="_detailShow(item.id, $event)">
           <div class="order-left">
-            <img width="57px" height="57px"
+            <img width="47px" height="47px"
                  :src="item.order_logo">
           </div>
           <div class="order-middle">
@@ -141,40 +141,40 @@
   @import "../../common/stylus/mixin.styl"
   .order
     position: absolute
-    top: 174px
+    top: 126px
     left: 0
     bottom: 0
     width: 100%
     overflow: hidden
     .order-item
       .order-header
-        padding: 18px 18px 5px 18px
+        padding: 4px
         line-height: 14px
         color: rgb(147, 153, 159)
-        font-size: 14px
+        font-size: 12px
         .order-no
           margin-left: 8px
       .order-main
         display: flex
-        padding: 5px 0
-        margin: 0 18px
+        padding-top: 5px
+        margin: 0 4px
         border-top: 1px solid #EDEDED
         border-bottom: 1px solid #EDEDED
         .order-left
           display: inline-block
           vertical-align: top
           img
-            flex: 0 0 57px
+            flex: 0 0 47px
             margin-right: 10px
         .order-middle
           flex: 1
           .order-desc, .order-count
-            margin: 10px 0
+            margin: 8px 0
             color: rgb(147, 153, 159)
             font-size: 10px
         .order-right
           flex: 1
-          margin: 19px 0
+          margin: 12px 0
           text-align: right
           .order-status
             font-size: 10px
@@ -186,17 +186,17 @@
             color: #57AB53
       .order-bottom
         display: flex
-        padding-top: 5px
-        margin: 0 18px 9px 18px
+        padding-top: 4px
+        margin: 0 4px 4px 4px
         .desc
           flex: 1
-          line-height: 28px
+          line-height: 22px
           font-size: 14px
           color: rgb(7, 17, 27)
         .pay, .confirm, .complete, .shut
-          flex: 0 0 70px
-          height: 28px
-          line-height: 28px
+          flex: 0 0 60px
+          height: 22px
+          line-height: 22px
           color: #fff
           font-size: 14px
           text-align: center

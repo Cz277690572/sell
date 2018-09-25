@@ -5,7 +5,7 @@
     </div>
     <div class="content-wrapper">
       <div class="avatar">
-        <img width="64" height="64" :src="seller.logo">
+        <img width="48px" height="48px" :src="seller.logo">
       </div>
       <div class="content">
         <div class="title">
@@ -86,11 +86,13 @@
       .icon-arrow_lift
         position: absolute
         left: 0
-        top: 10px
-        padding-left: 9px
+        top: 6px
+        padding-left: 8px
     .content-wrapper
-      /*padding: 24px 12px 18px 24px*/
-      padding: 32px 12px 10px 36px
+      padding-top: 28px
+      padding-right: 4px
+      padding-bottom: 4px
+      padding-left: 36px
       font-size: 0
       .avatar
         display: inline-block
@@ -99,7 +101,7 @@
           border-radius: 2px
       .content
         display: inline-block
-        margin-left: 16px
+        margin-left: 8px
         font-size: 14px
         .title
           margin: 2px 0 8px 0
@@ -107,14 +109,14 @@
             display: inline-block
             vertical-align: top
             width: 30px
-            height: 18px
+            height: 16px
             bg-image("brand")
             background-size: 30px 18px
             background-repeat: no-repeat
           .name
-            margin-left: 6px
-            font-size: 16px
-            line-height: 18px
+            margin-left: 4px
+            font-size: 12px
+            line-height: 12px
             font-weight: bold
         .description
           margin-bottom:10px
@@ -124,11 +126,10 @@
           .text
             line-height: 12px
             font-size: 12px
-
     .bulletin-wrapper
       position: relative
-      height: 28px
-      line-height: 28px
+      height: 20px
+      line-height: 20px
       padding: 0 22px 0 12px
       white-space: nowrap
       overflow: hidden
@@ -137,7 +138,7 @@
       .bulletin-title
         display: inline-block
         vertical-align: top
-        margin-top: 8px
+        margin-top: 4px
         width: 22px
         height: 12px
         bg-image('bulletin')
@@ -154,7 +155,7 @@
         position: absolute
         font-size: 10px
         right: 12px
-        top: 8px
+        top: 4px
     .background
       position: absolute;
       top: 0

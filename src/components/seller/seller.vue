@@ -120,13 +120,13 @@
   @import "../../common/stylus/mixin.styl"
   .seller
     position: absolute
-    top: 174px
+    top: 126px
     bottom: 0
     left: 0
     width: 100%
     overflow: hidden
     .overview
-      padding: 18px
+      padding: 8px
       .title
         padding-bottom: 8px
         line-height: 14px
@@ -135,7 +135,7 @@
         border-1px(rgba(7, 17, 27, 0.1))
       .remark
         display: flex
-        padding-top: 18px
+        padding-top: 8px
         .block
           flex: 1
           text-align: center
@@ -154,22 +154,22 @@
             .stress
               font-size: 14px
     .bulletin
-      padding: 18px 18px 0 18px
+      padding: 8px 8px 0 8px
       .title
         padding-bottom:  8px
         line-height: 14px
         font-size: 14px
         color: rgb(7, 17 ,27)
       .content-wrapper
-        padding: 0 12px 16px 12px
+        padding: 0 8px 8px 12px
         .content
-          line-height: 24px
+          line-height: 20px
           font-size: 12px
           color: rgb(240, 20, 20)
     .pics
-      padding: 18px
+      padding: 8px
       .title
-        padding-bottom: 12px
+        padding-bottom: 4px
         line-height: 14px
         color: rgb(7, 17 ,27)
         font-size: 14px
@@ -187,15 +187,15 @@
             &:last-child
               margin: 0
     .info
-      padding: 18px 18px 0 18px
+      padding: 8px 8px 0 8px
       color: rgb(7, 17, 27)
       .title
-        padding-bottom: 12px
+        padding-bottom: 8px
         line-height: 14px
         border-1px(rgba(7, 17, 27, 0.1))
         font-size: 14px
       .info-item
-        padding: 16px 12px
+        padding: 8px
         line-height: 16px
         border-1px(rgba(7, 17, 27, 0.1))
         font-size: 12px

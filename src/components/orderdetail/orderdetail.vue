@@ -37,10 +37,12 @@
             </div>
           </div>
           <div class="address">
+            <span>地址:</span>
             <span>{{order.express_address}}</span>
           </div>
           <div class="desc">
-            <span>{{order.desc}}</span>
+            <span>备注:</span>
+            <span>{{order.desc || '无'}}</span>
           </div>
         </div>
       </div>
@@ -62,7 +64,7 @@
         <div class="goods-wrapper">
           <div class="item" v-for="(item, index) in goods" :key="index">
             <div class="item-left">
-              <img height="64px" width="64px"
+              <img height="47px" width="47px"
                    :src="item.icon">
             </div>
             <div class="item-middle">
@@ -332,7 +334,7 @@
       transform: translate3d(100%, 0, 0)
     .title
       padding-left: 9px
-      line-height: 46px
+      line-height: 36px
       color: #fff
       font-size: 16px
       text-align: center
@@ -340,25 +342,25 @@
       .icon-arrow_lift
         position: absolute
         left: 0
-        top: 15px
+        top: 9px
         padding-left: 9px
     .order-info
-      font-size: 14px
-      height: 156px
+      font-size: 12px
+      height: 112px
       color: #999999
       .order-summary
-        padding: 0 9px
+        padding: 0 4px
         display: flex
         border-1px(rgba(7, 17, 27, 0.1))
         .order-time-no
-          flex: 0 0 230px
-          line-height: 36px
+          flex: 0 0 205px
+          line-height: 24px
           .order-time, .order-no
             .text
               color: #333
         .order-status
           flex: 1
-          line-height: 72px
+          line-height: 48px
           text-align: right
           .unpay, .shut
             color: red
@@ -367,10 +369,10 @@
           .done, .complete
             color: #57AB53
       .order-contact-info
-        padding: 1px 9px
-        font-size: 14px
-        line-height: 36px
-        border-bottom: 10px solid #f3f5f7
+        padding: 1px 4px
+        font-size: 12px
+        line-height: 21px
+        border-bottom: 8px solid #f3f5f7
         .user-info
           display: flex
           .name
@@ -382,22 +384,22 @@
             .text
               color: #333
     .receipt-info
-      padding: 9px
-      line-height: 32px
+      padding: 4px
+      line-height: 22px
       color: rgb(7, 17, 27)
       font-size: 14px
-      border-bottom: 10px solid #f3f5f7
+      border-bottom: 8px solid #f3f5f7
       .contacts, .phone, .address, .desc
         border-1px(rgba(7, 17, 27, 0.1))
         input
           width: 100%
-          height: 28px
+          height: 26px
           outline: none
     .goods
       position: fixed
       display: flex
       flex-direction: column
-      top: 202px
+      top: 156px
       left: 0
       bottom: 0px
       overflow: hidden
@@ -405,15 +407,15 @@
       .goods-wrapper
         .item
           display: flex
-          padding: 9px
+          padding: 4px
           color: #6D6D6D
-          font-size: 14px
-          line-height: 24px
+          font-size: 12px
+          line-height: 22px
           border-1px(rgba(7, 17, 27, 0.1))
           &:last-child
-            margin-bottom: 48px
+            margin-bottom: 38px
           .item-left
-            flex: 0 0 64px
+            flex: 0 0 47px
             margin-right: 10px
             img
               border-radius: 2px
@@ -421,7 +423,7 @@
             flex: 1
           .item-right
             flex: 0 0 62px
-            padding-right: 8px
+            padding-right: 4px
             text-align: right
     .order-account
       position: fixed
@@ -430,8 +432,8 @@
       bottom: 0
       z-index: 100
       width: 100%
-      height: 48px
-      line-height: 48px
+      height: 38px
+      line-height: 38px
       font-size: 14px
       background: #141d27
       border-top: 1px solid #f3f5f7
@@ -466,7 +468,9 @@
         opacity: 0
         background: rgba(7, 17, 27, 0)
       .pay-result
-        margin: 180px 60px
+        margin: 70px 42px
+        width: 200px
+        height: 250px
         padding: 8px 8px
         border-radius: 8px
         background: #fff
@@ -484,7 +488,6 @@
             text-align: center
             line-height: 28px
             font-size: 14px
-            padding-bottom: 9px
             .go-back
               flex: 1
               margin: 10px 10px

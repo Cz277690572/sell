@@ -38,7 +38,7 @@
               <li class="food" v-for="(food, index) in selectFoods" :key="index">
                 <span class="name">{{food.name}}</span>
                 <div class="price">
-                  <span>￥{{food.price*food.count}}</span>
+                  <span>￥{{(food.price*food.count).toFixed(2)}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
                   <cartcontrol :food="food" :seller-id="seller.id"></cartcontrol>
@@ -104,12 +104,16 @@
       }
     },
     computed: {
+      // foodsPrice(price, count) {
+      //   let totalPrice = price * count
+      //   return totalPrice.toFixed(2)
+      // },
       totalPrice() {
         let total = 0
         this.selectFoods.forEach((food) => {
           total += food.price * food.count
         })
-        return total
+        return total.toFixed(2)
       },
       totalCount() {
         let count = 0
@@ -261,7 +265,7 @@
     bottom: 0
     z-index: 50
     width: 100%
-    height: 48px
+    height: 38px
     .content
       display: flex
       background: #141d27
@@ -273,16 +277,16 @@
           display: inline-block
           position: relative
           top: -10px
-          margin: 0 12px
-          width: 56px
-          height: 56px
+          margin: 0 8px 0 12px
+          width: 46px
+          height: 46px
           box-sizing: border-box
           vertical-align: top
           border-radius: 50%
           background: #141d27
           .logo
-            width: 46px
-            height: 46px
+            width: 36px
+            height: 36px
             border-radius: 50%
             text-align: center
             margin: 5px auto 5px auto
@@ -314,26 +318,24 @@
           display: inline-block
           vertical-align: top
           margin-top: 12px
-          line-height: 24px
-          padding-right: 24px
+          padding-right: 4px
           box-sizing: border-box
           border-right: 1px solid rgba(255, 255, 255, 0.1)
-          font-size: 16px
+          font-size: 14px
           font-weight: 700
           &.highlight
             color: #fff
         .desc
           display: inline-block
           vertical-align: top
-          line-height: 24px
-          margin: 12px 0 0 12px
+          margin: 12px 0 0 4px
           font-size: 10px
       .content-right
         flex: 0 0 105px
         width: 105px
         .pay
-          height: 48px
-          line-height: 48px
+          height: 38px
+          line-height: 38px
           text-align: center
           font-size: 14px
           font-weight: 700
@@ -367,8 +369,8 @@
       &.fold-enter, &.fold-leave-active
         transform: translate3d(0, 0, 0)
       .list-header
-        height: 40px
-        line-height: 40px
+        height: 36px
+        line-height: 36px
         padding: 0 18px
         background: #f3f5f7
         border-bottom: 1px solid rgba(7, 17, 27, 0.1)
@@ -387,25 +389,25 @@
         background: #fff
         .food
           position: relative
-          padding: 12px 0
+          padding: 10px 0
           box-sizing: border-box
           border-1px(rgba(7, 17, 27, 0.1))
           .name
-            line-height: 24px
-            font-size: 14px
+            line-height: 20px
+            font-size: 12px
             color: rgb(7, 17, 27)
           .price
             position: absolute
             right: 90px
             bottom: 12px
-            line-height: 24px
-            font-size: 14px
+            line-height: 20px
+            font-size: 12px
             font-weight: 700
             color: rgb(240, 20, 20)
           .cartcontrol-wrapper
             position: absolute
             right: 0
-            bottom: 6px
+            bottom: 10px
 
   .listmask
     position: fixed

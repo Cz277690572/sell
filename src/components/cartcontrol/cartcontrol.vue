@@ -61,36 +61,35 @@
     font-size: 0px
     .cart-decrease // .move 与 .cart-decrease 是 同级关系
       display: inline-block
-      padding: 6px
+      /*padding: 6px*/
       transition: all 0.4s linear
       &.move-transition
         opacity: 1
         transform: translate3d(0, 0, 0)
       .inner
         display: inline-block
-        line-height: 24px
-        font-size: 24px
+        line-height: 20px
+        font-size: 20px
         color: rgb(0, 160, 220)
         transition: all 0.4s linear
         transform: rotate(0)
       &.move-enter, &.move-leave
         opacity: 0
-        transform: translate3d(24px, 0, 0)
+        transform: translate3d(20px, 0, 0)
       .inner
         transform: rotate(180deg)
     .cart-count
       display: inline-block
       vertical-align: top
       width: 12px
-      padding-top: 6px
-      line-height: 24px
+      line-height: 20px
       text-align: center
       font-size: 10px
       color: rgb(147, 153, 159)
     .cart-add
       display: inline-block
-      padding: 6px
-      line-height: 24px
-      font-size: 24px
+      padding: 0 4px 0 4px
+      line-height: 20px
+      font-size: 20px
       color: rgb(0, 160, 220)
 </style>

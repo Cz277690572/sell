@@ -76,8 +76,8 @@
     .tab
       display: flex
       width: 100%
-      height: 40px
-      line-height: 40px
+      height: 26px
+      line-height: 26px
       border-1px(rgba(1, 17, 27, 0.1))
       .tab-item
         flex: 1
