@@ -124,6 +124,7 @@
 <script>
   import BScroll from 'better-scroll'
   import {saveToLocal} from '../../common/js/cart'
+  import wx from 'weixin-js-sdk'
 
   export default {
     props: {
@@ -191,22 +192,22 @@
         } else if (this.from === 'order') {
           this.orderStatus = false
           this.$axios.get('/wap/order/getDetail.html?id=' + orderId).then((res) => {
-              if (res.code === 1) {
-                this.order = res.data
-                this.goods = this.order.goodsList
-                this.goods.forEach((item) => {
-                  this.totalPrice += item['price'] * item['count']
-                })
-                this.$nextTick(() => {
-                  this._initScroll()
-                })
-                if (this.order.status === '未支付') {
-                  this.orderStatus = true
-                  this._payDesc()
-                }
-              } else {
-                console.log(res)
+            if (res.code === 1) {
+              this.order = res.data
+              this.goods = this.order.goodsList
+              this.goods.forEach((item) => {
+                this.totalPrice += item['price'] * item['count']
+              })
+              this.$nextTick(() => {
+                this._initScroll()
+              })
+              if (this.order.status === '未支付') {
+                this.orderStatus = true
+                this._payDesc()
               }
+            } else {
+              alert(res.msg)
+            }
           })
         }
       },
@@ -246,11 +247,51 @@
           params.goods.push({goods_id: item.id, count: item.count})
         })
         this.$axios.post('/wap/order/placeorder', params).then((res) => {
-          console.log(res)
           if (res.code === 1) {
-            this.payShow = true
-            this.payRes = 'success'
+            // 清空购物车
+            this._emptyCart()
+            let oParams = {
+              id: res.data.order_id
+            }
+            this.$axios.post('/wap/pay/getPreOrder', oParams).then((res) => {
+              if (res.code === 1) {
+                let configJSON = JSON.parse(res.data.configJSON)
+                let optionJSON = JSON.parse(res.data.optionJSON)
+                wx.config({
+                  debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                  appId: configJSON.appId, // 必填，公众号的唯一标识
+                  timestamp: configJSON.timestamp, // 必填，生成签名的时间戳
+                  nonceStr: configJSON.nonceStr, // 必填，生成签名的随机串
+                  signature: configJSON.signature, // 必填，签名
+                  jsApiList: configJSON.jsApiList // 必填，需要使用的JS接口列表
+                })
+                wx.chooseWXPay({
+                  timestamp: optionJSON.timestamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+                  nonceStr: optionJSON.nonceStr, // 支付签名随机串，不长于 32 位
+                  package: optionJSON.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+                  signType: optionJSON.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+                  paySign: optionJSON.paySign, // 支付签名
+                  success: function (res) {
+                    // 支付成功后的回调函数
+                    this.payShow = true
+                    this.payRes = 'success'
+                  },
+                  cancel: function (res) {
+                    // 支付取消
+                    this.$router.push({path: '/orders'})
+                  },
+                  fail: function (res) {
+                    // 支付失败
+                    this.payShow = true
+                    this.payRes = 'error'
+                  }
+                })
+              } else {
+                alert(res.msg)
+              }
+            })
           } else {
+            alert(res.msg)
           }
         })
         // console.log('提交参数审核通过，提交订单;返回订单id,清空购物车,提交订单id，拉起微信支付，返回支付结果, 跳转至支付结果')
@@ -262,7 +303,6 @@
         if (this.from === 'cart') {
           this.payShow = false
           this.showFlag = false
-          this._emptyCart()
         } else if (this.from === 'order') {
           this.$router.push({path: '/goods'})
         }
@@ -278,9 +318,47 @@
         }
       },
       _fromOrder() {
-        console.log('提交订单ID，拉起微信支付, 返回支付结果, 跳转至支付结果')
-        this.payShow = true
-        this.payRes = 'success'
+        // console.log('提交订单ID，拉起微信支付, 返回支付结果, 跳转至支付结果')
+        let oParams = {
+          id: this.order.id
+        }
+        this.$axios.post('/wap/pay/getPreOrder', oParams).then((res) => {
+          if (res.code === 1) {
+            let configJSON = JSON.parse(res.data.configJSON)
+            let optionJSON = JSON.parse(res.data.optionJSON)
+            wx.config({
+              debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+              appId: configJSON.appId, // 必填，公众号的唯一标识
+              timestamp: configJSON.timestamp, // 必填，生成签名的时间戳
+              nonceStr: configJSON.nonceStr, // 必填，生成签名的随机串
+              signature: configJSON.signature, // 必填，签名
+              jsApiList: configJSON.jsApiList // 必填，需要使用的JS接口列表
+            })
+            wx.chooseWXPay({
+              timestamp: optionJSON.timestamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+              nonceStr: optionJSON.nonceStr, // 支付签名随机串，不长于 32 位
+              package: optionJSON.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+              signType: optionJSON.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+              paySign: optionJSON.paySign, // 支付签名
+              success: function (res) {
+                // 支付成功后的回调函数
+                this.payShow = true
+                this.payRes = 'success'
+              },
+              cancel: function (res) {
+                // 支付取消
+                this.$router.push({path: '/orders'})
+              },
+              fail: function (res) {
+                // 支付失败
+                this.payShow = true
+                this.payRes = 'error'
+              }
+            })
+          } else {
+            alert(res.msg)
+          }
+        })
       },
       _payDesc() {
         if (this.seller.status === 0) {

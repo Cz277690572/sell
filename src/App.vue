@@ -50,7 +50,7 @@
       } else {
         let token = this.$route.query.token
         if (token) {
-          window.localStorage.setItem('token', 'b2fb67c443f256124834b66898ae42e4')
+          window.localStorage.setItem('token', '2d91c999ca2c4f37b7c163e16880be5c')
         }
         this.isShowShop = false
       }
