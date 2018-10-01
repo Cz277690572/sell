@@ -157,10 +157,10 @@
     },
     computed: {
       payClass() {
-        if (this.seller.status === 0) {
+        if (this.seller.status === '休息中') {
           return 'not-enough'
         }
-        if (this.totalPrice < this.seller.start_price) {
+        if (parseFloat(this.totalPrice) < parseFloat(this.seller.start_price)) {
           return 'not-enough'
         } else {
           return 'enough'
@@ -170,7 +170,7 @@
     methods: {
       show(orderId = 0) {
         this.showFlag = true
-        this.totalPrice = 0
+        let tmpTotalPrice = 0
         if (this.from === 'cart') {
           this.orderStatus = true
           this.$axios.get('/wap/member/getaddress.html').then((res) => {
@@ -180,8 +180,11 @@
           })
           this.goods = this.cartGoods
           this.goods.forEach((item) => {
-            this.totalPrice += item['price'] * item['count']
+            let tmpPrice = 0
+            tmpPrice = parseInt(item['price'] * item['count'] * 100) / 100
+            tmpTotalPrice += tmpPrice
           })
+          this.totalPrice = tmpTotalPrice.toFixed(2)
           this.$nextTick(() => {
             this._initScroll()
           })
@@ -189,22 +192,26 @@
         } else if (this.from === 'order') {
           this.orderStatus = false
           this.$axios.get('/wap/order/getDetail.html?id=' + orderId).then((res) => {
-              if (res.code === 1) {
-                this.order = res.data
-                this.goods = this.order.goodsList
-                this.goods.forEach((item) => {
-                  this.totalPrice += item['price'] * item['count']
-                })
-                this.$nextTick(() => {
-                  this._initScroll()
-                })
-                if (this.order.status === '未支付') {
-                  this.orderStatus = true
-                  this._payDesc()
-                }
-              } else {
-                console.log(res)
+            if (res.code === 1) {
+              this.order = res.data
+              this.goods = this.order.goodsList
+              this.goods.forEach((item) => {
+                let tmpPrice = 0
+                tmpPrice = parseInt(item['price'] * item['count'] * 100) / 100
+                tmpTotalPrice += tmpPrice
+              })
+              this.totalPrice = tmpTotalPrice.toFixed(2)
+              this.$nextTick(() => {
+                this._initScroll()
+              })
+              this._payDesc()
+              if (this.order.status === '未支付') {
+                this.orderStatus = true
+                this._payDesc()
               }
+            } else {
+              alert(res.msg)
+            }
           })
         }
       },
@@ -244,11 +251,11 @@
           params.goods.push({goods_id: item.id, count: item.count})
         })
         this.$axios.post('/wap/order/placeorder', params).then((res) => {
-          console.log(res)
           if (res.code === 1) {
             this.payShow = true
             this.payRes = 'success'
           } else {
+            alert(res.msg)
           }
         })
         // console.log('提交参数审核通过，提交订单;返回订单id,清空购物车,提交订单id，拉起微信支付，返回支付结果, 跳转至支付结果')
@@ -276,21 +283,25 @@
         }
       },
       _fromOrder() {
+        if (this.seller.status === '休息中' || parseFloat(this.totalPrice) < parseFloat(this.seller.start_price)) {
+          return
+        }
         console.log('提交订单ID，拉起微信支付, 返回支付结果, 跳转至支付结果')
         this.payShow = true
         this.payRes = 'success'
       },
       _payDesc() {
-        if (this.seller.status === 0) {
+        if (this.seller.status === '休息中') {
           this.payDesc = '休息中'
-        }
-        if (this.totalPrice === 0) {
-          this.payDesc = `￥${this.seller.start_price}元起送`
-        } else if (this.totalPrice < this.seller.start_price) {
-          let diff = this.seller.start_price - this.totalPrice
-          this.payDesc = `还差￥${diff}元起送`
         } else {
-          this.payDesc = '去支付'
+          if (this.totalPrice === '0' || this.totalPrice === '0.00') {
+            this.payDesc = `￥${this.seller.start_price}元起送`
+          } else if (parseFloat(this.totalPrice) < parseFloat(this.seller.start_price)) {
+            let diff = (parseFloat(this.seller.start_price) - parseFloat(this.totalPrice)).toFixed(2)
+            this.payDesc = `还差￥${diff}元起送`
+          } else {
+            this.payDesc = '去支付'
+          }
         }
       },
       _emptyCart() {
@@ -352,13 +363,13 @@
         border-1px(rgba(7, 17, 27, 0.1))
         .order-time-no
           flex: 0 0 230px
-          line-height: 36px
+          line-height: 29px
           .order-time, .order-no
             .text
               color: #333
         .order-status
           flex: 1
-          line-height: 72px
+          line-height: 58px
           text-align: right
           .unpay, .shut
             color: red
@@ -367,9 +378,9 @@
           .done, .complete
             color: #57AB53
       .order-contact-info
-        padding: 1px 9px
+        padding: 1px 9px 0px 9px
         font-size: 14px
-        line-height: 36px
+        line-height: 29px
         border-bottom: 10px solid #f3f5f7
         .user-info
           display: flex
@@ -466,13 +477,14 @@
         opacity: 0
         background: rgba(7, 17, 27, 0)
       .pay-result
-        margin: 180px 60px
+        width: 200px
+        margin: 150px auto
         padding: 8px 8px
         border-radius: 8px
         background: #fff
         .success, .error
           .pay-icon
-            padding: 48px 0 28px 0
+            padding: 28px 0 28px 0
             text-align: center
           .title
             line-height: 48px

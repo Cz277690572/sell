@@ -94,18 +94,16 @@
       // 是不做处理
       // 不是读取缓存中的shopId
       if (JSON.stringify(this.seller) === '{}') {
-        console.log('goods强制刷新')
         this.shopId = getStorageSync('shopId')
         this.$axios.get('/wap/location/getshopbyid.html?id=' + this.shopId).then((res) => {
           if (res.code === 1) {
             this.shop = res.data
             this._loadData()
           } else {
-            console.log(res)
+            alert(res.msg)
           }
         })
       } else {
-        console.log('goods不是强制刷新')
         this.shop = this.seller
         this._loadData()
       }
@@ -120,7 +118,6 @@
       },
       _loadData() {
         this.$axios.get('/wap/goods/getgoodsbyshop.html?id=' + this.shop.id).then((res) => {
-          console.log(res)
           if (res.code === 1) {
             this.goods = res.data
             this.$nextTick(() => {
@@ -128,7 +125,6 @@
               this._calculateHeight()
             })
           } else {
-            console.log(res)
           }
         })
       },
@@ -218,8 +214,8 @@
         background: #f3f5f7
       .food-item
         display: flex
-        margin: 18px
-        padding-bottom: 18px
+        margin: 10px
+        padding-bottom: 10px
         border-1px(rgba(7, 17, 27, 0.1))
         &:last-child
           border-none()
@@ -259,5 +255,5 @@
           .cartcontrol-wrapper
             position: absolute
             right: 0
-            bottom: 12px
+            bottom: 4px
 </style>

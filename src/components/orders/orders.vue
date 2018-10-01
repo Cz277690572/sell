@@ -59,23 +59,18 @@
       }
     },
     created() {
-      console.log(this.orders)
       // 判断缓父组件是否传来this.seller
       // 是不做处理
       // 不是读取缓存中的shopId
       if (JSON.stringify(this.seller) === '{}') {
-        console.log('orders强制刷新')
         this.shopId = getStorageSync('shopId')
         this.$axios.get('/wap/location/getshopbyid.html?id=' + this.shopId).then((res) => {
           if (res.code === 1) {
             this.shop = res.data
             this._loadData()
-          } else {
-            console.log(res)
           }
         })
       } else {
-        console.log('orders不是强制刷新')
         this.shop = this.seller
         this._loadData()
       }
@@ -97,7 +92,6 @@
             })
           } else {
             this.orderCount = false
-            console.log(res)
           }
         })
       },
@@ -117,12 +111,10 @@
       },
       _confirm(index, orderId) {
         if (confirm('确认收货吗？')) {
-          console.log(orderId)
           let params = {
             id: orderId
           }
           this.$axios.post('wap/order/receive', params).then((res) => {
-            console.log(res)
             if (res.code === 1) {
               this.orders[index].status = '已收货'
             } else {

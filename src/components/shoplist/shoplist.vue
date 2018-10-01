@@ -1,6 +1,6 @@
 <template>
   <div class="shoplist">
-    <div class="title">请选择商家</div>
+    <div v-if="showShops" class="title">请选择商家</div>
     <div v-if="showShops" class="shops" ref="shops">
       <div class="shops-wrapper">
         <div class="shop-item" v-for="(item, index) in shops" :key="index" @click="selectShop(item,$event)">
@@ -8,7 +8,7 @@
             <img width="64px" height="64px" :src="item.logo">
           </div>
           <div class="shop-right">
-            <div class="shop-name">{{item.name}}</div>
+            <div class="shop-name">{{item.title}}</div>
             <div class="shop-status">状态: <span class="close" :class="{on:item.status=='营业中'}">{{item.status}}</span>
             </div>
             <div class="shop-desc">说明: {{item.desc}}</div>
@@ -18,7 +18,8 @@
       </div>
     </div>
     <div v-if="!showShops" class="no-shops">
-      <span>商家还未入驻，敬请期待！</span>
+      <!--<span>商家还未入驻，敬请期待！</span>-->
+        <span>{{shopDesc}}</span>
     </div>
   </div>
 </template>
@@ -29,6 +30,7 @@
     data() {
       return {
         showShops: true,
+        shopDesc: '',
         shops: {},
         selectedShop: {},
         token: null
@@ -36,13 +38,11 @@
     },
     created() {
         this.$axios.get('/wap/location/getshops').then((res) => {
-          console.log(res)
           if (res.code === 1) {
             this.shops = res.data
             this._initScroll()
           } else {
             this.showShops = false
-            console.log(res)
           }
         })
     },
@@ -52,15 +52,6 @@
           this._initScroll()
         })
       }
-    },
-    mounted() {
-      // this.$http.get('/api/shops').then((response) => {
-      //   response = response.body
-      //   if (response.errno === ERR_OK) {
-      //     this.shops = response.data
-      //     this._initScroll()
-      //   }
-      // })
     },
     methods: {
       _initScroll() {

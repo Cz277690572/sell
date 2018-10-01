@@ -32,31 +32,8 @@ axios.defaults.baseURL = baseUrl
     var header = getResetToken()
     return axios.get(path, header).then((res) => {
       if (res.data.code === 403) {
-        console.log('get请求，token失效，重新获取token')
-        console.log(wxLoginUrl)
         window.localStorage.setItem('token', '')
         window.location.href = wxLoginUrl
-        // https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx27426b7ce34961cf&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2F%23%2Fshoplist&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect
-        // 用户token过期做的处理
-        // axios.get('/wap/token/getToken?code=111111').then((res) => {
-        //     if (res.data.code === 1) {
-        //       console.log('token失效，重新获取token成功')
-        //       window.localStorage.setItem('token', res.data.data.token)
-        //       header = getResetToken()
-        //       axios.get(path, header).then((res) => {
-        //         if (res.data.code === 403) {
-        //           console.log(res)
-        //         } else {
-        //           return res.data
-        //         }
-        //       })
-        //     } else {
-        //       console.log('token失效，重新获取token失败')
-        //       console.log(res)
-        //     }
-        // }).catch((error) => {
-        //   console.log('重新获取token请求失败' + error)
-        // })
       }
       return res.data
     }).catch((error) => {
@@ -67,27 +44,6 @@ axios.defaults.baseURL = baseUrl
     var header = getResetToken()
     return axios.post(path, params, header).then((res) => {
       if (res.data.code === 403) {
-        // 用户token过期做的处理
-        // axios.get('/wap/token/getToken?code=111111').then((res) => {
-        //   if (res.data.code === 1) {
-        //     console.log('token失效，重新获取token成功')
-        //     window.localStorage.setItem('token', res.data.data.token)
-        //     header = getResetToken()
-        //     axios.post(path, params, header).then((res) => {
-        //       if (res.data.code === 403) {
-        //         console.log(res)
-        //       } else {
-        //         return res.data
-        //       }
-        //     })
-        //   } else {
-        //     console.log('token失效，重新获取token失败')
-        //     console.log(res)
-        //   }
-        // }).catch((error) => {
-        //   console.log('重新获取token请求失败' + error)
-        // })
-        console.log('post请求，token失效，重新获取token')
         window.localStorage.setItem('token', '')
         window.location.href = wxLoginUrl
       }

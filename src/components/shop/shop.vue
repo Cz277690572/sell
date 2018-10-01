@@ -39,7 +39,6 @@
       // 是重置this.shop.id
       // 不是读取缓存中的this.shop.id
       if (JSON.stringify(this.shop) !== '{}') {
-        console.log('shop不是强制刷新,设置缓存')
         this.shopId = this.shop.id
         setStorageSync('shopId', this.shopId)
         this.$axios.get('/wap/location/getshopbyid.html?id=' + this.shopId).then((res) => {
@@ -50,7 +49,6 @@
           }
         })
       } else {
-        console.log('shop强制刷新,读取缓存')
         this.shopId = getStorageSync('shopId')
         this.$axios.get('/wap/location/getshopbyid.html?id=' + this.shopId).then((res) => {
           if (res.code === 1) {

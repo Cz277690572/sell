@@ -13,8 +13,7 @@
           <div class="desc">免配送费</div>
         </div>
         <div class="content-right">
-          <div class="pay" :class="payClass" @click="orderdetail()">
-            {{payDesc}}
+          <div class="pay" :class="payClass" v-html="payDesc" @click="orderdetail()">
           </div>
         </div>
       </div>
@@ -38,7 +37,7 @@
               <li class="food" v-for="(food, index) in selectFoods" :key="index">
                 <span class="name">{{food.name}}</span>
                 <div class="price">
-                  <span>￥{{food.price*food.count}}</span>
+                  <span>￥{{(food.price*food.count).toFixed(2)}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
                   <cartcontrol :food="food" :seller-id="seller.id"></cartcontrol>
@@ -61,7 +60,6 @@
   import {saveToLocal} from '../../common/js/cart'
   import BScroll from 'better-scroll'
   import orderdetail from '../orderdetail/orderdetail'
-  // import {getStorageSync} from '../../common/js/base'
   export default {
     components: {
       'cartcontrol': cartcontrol,
@@ -80,7 +78,6 @@
     },
     data() {
       return {
-        // shop: {},
         balls: [
           {
             show: false
@@ -107,9 +104,11 @@
       totalPrice() {
         let total = 0
         this.selectFoods.forEach((food) => {
-          total += food.price * food.count
+          let tmpPrice = 0
+          tmpPrice = food.price * food.count
+          total += parseInt(tmpPrice * 100) / 100
         })
-        return total
+        return total.toFixed(2)
       },
       totalCount() {
         let count = 0
@@ -119,23 +118,23 @@
         return count
       },
       payDesc() {
-        if (this.seller.status === 0) {
+        if (this.seller.status === '休息中') {
           return '休息中'
         }
-        if (this.totalPrice === 0) {
+        if (this.totalPrice === '0' || this.totalPrice === '0.00') {
           return `￥${this.seller.start_price}元起送`
-        } else if (this.totalPrice < this.seller.start_price) {
-          let diff = this.seller.start_price - this.totalPrice
-          return `还差￥${diff}元起送`
+        } else if (parseFloat(this.totalPrice) < parseFloat(this.seller.start_price)) {
+          let diff = (parseFloat(this.seller.start_price) - parseFloat(this.totalPrice)).toFixed(2)
+          return `还差￥${diff}元`
         } else {
           return '去结算'
         }
       },
       payClass() {
-        if (this.seller.status === 0) {
+        if (this.seller.status === '休息中') {
           return 'not-enough'
         }
-        if (this.totalPrice < this.seller.start_price) {
+        if (parseFloat(this.totalPrice) < parseFloat(this.seller.start_price)) {
           return 'not-enough'
         } else {
           return 'enough'
@@ -162,19 +161,7 @@
         return show
       }
     },
-    created() {
-      // if (JSON.stringify(this.seller) === '{}') {
-      //   console.log('逻辑上不会走shopcart强制刷新')
-      //   this.shopId = getStorageSync('shopId', 0)
-      //   this.$axios.get('/wap/location/getshopbyid.html?id=' + this.shopId).then((res) => {
-      //     if (res.code === 1) {
-      //       this.shop = res.data
-      //     } else {
-      //       console.log(res)
-      //     }
-      //   })
-      // }
-    },
+    created() {},
     methods: {
       drop(el) {
         for (let i = 0; i < this.balls.length; i++) {
@@ -188,10 +175,7 @@
         }
       },
       orderdetail() {
-        // if (!event._constructed) {
-        //   return
-        // }
-        if (this.seller.status === 0 || this.totalPrice < this.seller.start_price) {
+        if (this.seller.status === '休息中' || parseFloat(this.totalPrice) < parseFloat(this.seller.start_price)) {
           return
         }
         this.$refs.orderdetail.show()
@@ -273,7 +257,7 @@
           display: inline-block
           position: relative
           top: -10px
-          margin: 0 12px
+          margin: 0px 12px 0px 12px
           width: 56px
           height: 56px
           box-sizing: border-box
@@ -315,7 +299,7 @@
           vertical-align: top
           margin-top: 12px
           line-height: 24px
-          padding-right: 24px
+          padding-right: 5px
           box-sizing: border-box
           border-right: 1px solid rgba(255, 255, 255, 0.1)
           font-size: 16px
@@ -326,7 +310,7 @@
           display: inline-block
           vertical-align: top
           line-height: 24px
-          margin: 12px 0 0 12px
+          margin: 12px 0 0 6px
           font-size: 10px
       .content-right
         flex: 0 0 105px

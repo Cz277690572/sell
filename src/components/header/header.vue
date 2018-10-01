@@ -5,7 +5,7 @@
     </div>
     <div class="content-wrapper">
       <div class="avatar">
-        <img width="64" height="64" :src="seller.logo">
+        <img width="64px" height="64px" :src="seller.logo">
       </div>
       <div class="content">
         <div class="title">
@@ -89,8 +89,7 @@
         top: 10px
         padding-left: 9px
     .content-wrapper
-      /*padding: 24px 12px 18px 24px*/
-      padding: 32px 12px 10px 36px
+      padding: 32px 12px 10px 40px
       font-size: 0
       .avatar
         display: inline-block

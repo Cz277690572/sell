@@ -24,7 +24,6 @@
     watch: {
       $route(to, from) {
         const thisUrl = this.$route.path
-        console.log(thisUrl)
         if (thisUrl === '/goods') {
           this.isShowShop = true
         } else if (thisUrl === '/orders') {
@@ -50,7 +49,7 @@
       } else {
         let token = this.$route.query.token
         if (token) {
-          window.localStorage.setItem('token', '0495e60cae94441146980e5065b955c7')
+          window.localStorage.setItem('token', token)
         }
         this.isShowShop = false
       }
