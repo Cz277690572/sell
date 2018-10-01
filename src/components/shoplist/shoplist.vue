@@ -19,7 +19,7 @@
     </div>
     <div v-if="!showShops" class="no-shops">
       <!--<span>商家还未入驻，敬请期待！</span>-->
-        <span>{{shopDesc}}</span>
+      <span>{{shopDesc}}</span>
     </div>
   </div>
 </template>
@@ -37,14 +37,14 @@
       }
     },
     created() {
-        this.$axios.get('/wap/location/getshops').then((res) => {
-          if (res.code === 1) {
-            this.shops = res.data
-            this._initScroll()
-          } else {
-            this.showShops = false
-          }
-        })
+      this.$axios.get('/wap/location/getshops').then((res) => {
+        if (res.code === 1) {
+          this.shops = res.data
+          this._initScroll()
+        } else {
+          this.showShops = false
+        }
+      })
     },
     watch: {
       'shops'() {

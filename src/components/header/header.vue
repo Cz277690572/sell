@@ -26,23 +26,23 @@
     </div>
     <transition name="fade">
       <div v-show="detailShow" class="detail">
-      <div class="detail-wrapper">
-        <div class="detail-main">
-          <h1 class="name">{{seller.title}}</h1>
-          <div class="title">
-            <div class="line"></div>
-            <div class="text">商家公告</div>
-            <div class="line"></div>
-          </div>
-          <div class="bulletin">
-            <p class="content">{{seller.content || '暂无公告'}}</p>
+        <div class="detail-wrapper">
+          <div class="detail-main">
+            <h1 class="name">{{seller.title}}</h1>
+            <div class="title">
+              <div class="line"></div>
+              <div class="text">商家公告</div>
+              <div class="line"></div>
+            </div>
+            <div class="bulletin">
+              <p class="content">{{seller.content || '暂无公告'}}</p>
+            </div>
           </div>
         </div>
+        <div class="detail-close" @click="closeDetail">
+          <i class="icon-close"></i>
+        </div>
       </div>
-      <div class="detail-close" @click="closeDetail">
-        <i class="icon-close"></i>
-      </div>
-    </div>
     </transition>
   </div>
 </template>
