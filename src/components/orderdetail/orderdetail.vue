@@ -122,7 +122,6 @@
 <script>
   import BScroll from 'better-scroll'
   import {saveToLocal} from '../../common/js/cart'
-
   export default {
     props: {
       seller: {
@@ -178,7 +177,7 @@
               this.receipt = res.data
             }
           })
-          this.goods = this.cartGoods
+          this.goods = JSON.parse(JSON.stringify(this.cartGoods))
           this.goods.forEach((item) => {
             let tmpPrice = 0
             tmpPrice = parseInt(item['price'] * item['count'] * 100) / 100
@@ -252,29 +251,59 @@
         })
         this.$axios.post('/wap/order/placeorder', params).then((res) => {
           if (res.code === 1) {
-            this.payShow = true
-            this.payRes = 'success'
+            // 清空购物车
+            this._emptyCart()
+            let oParams = {
+              id: res.data.order_id
+            }
+            this.$axios.post('/wap/pay/getPreOrder', oParams).then((res) => {
+              if (res.code === 1) {
+                // let configJSON = JSON.parse(res.data.configJSON)
+                let optionJSON = JSON.parse(res.data.optionJSON)
+                let that = this
+                WeixinJSBridge.invoke(
+                  'getBrandWCPayRequest', {
+                    'appId': optionJSON.appId,
+                    'timeStamp': optionJSON.timeStamp,
+                    'nonceStr': optionJSON.nonceStr,
+                    'package': optionJSON.package,
+                    'signType': optionJSON.signType,
+                    'paySign': optionJSON.paySign
+                  },
+                  function (res) {
+                    if (res.err_msg === 'get_brand_wcpay_request:ok') {
+                      // 支付成功
+                      that.payShow = true
+                      that.payRes = 'success'
+                    } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
+                      // 支付取消
+                      that.$router.push({path: '/orders'})
+                    } else if (res.err_msg === 'get_brand_wcpay_request:fail') {
+                      // 支付失败
+                      that.payShow = true
+                      that.payRes = 'error'
+                    }
+                  }
+                )
+              } else {
+                alert(res.msg)
+              }
+            })
           } else {
             alert(res.msg)
           }
         })
-        // console.log('提交参数审核通过，提交订单;返回订单id,清空购物车,提交订单id，拉起微信支付，返回支付结果, 跳转至支付结果')
-        // 求参数{"username":"阿猫","phone":"15220501265","address":"2栋622","desc":"不要加辣","goods":[{"goods_id":"2","count":"2"},{"goods_id":"1","count":"1"}]}
-        // this.payShow = true
-        // this.payRes = 'success'
       },
       _goBack() {
         if (this.from === 'cart') {
           this.payShow = false
           this.showFlag = false
-          this._emptyCart()
         } else if (this.from === 'order') {
           this.$router.push({path: '/goods'})
         }
       },
       _goOrder() {
         if (this.from === 'cart') {
-          this._emptyCart()
           this.$router.push({path: '/orders'})
         } else if (this.from === 'order') {
           this.$emit('loadorder')
@@ -286,9 +315,41 @@
         if (this.seller.status === '休息中' || parseFloat(this.totalPrice) < parseFloat(this.seller.start_price)) {
           return
         }
-        console.log('提交订单ID，拉起微信支付, 返回支付结果, 跳转至支付结果')
-        this.payShow = true
-        this.payRes = 'success'
+        // console.log('提交订单ID，拉起微信支付, 返回支付结果, 跳转至支付结果')
+        let oParams = {
+          id: this.order.id
+        }
+        this.$axios.post('/wap/pay/getPreOrder', oParams).then((res) => {
+          if (res.code === 1) {
+            // let configJSON = JSON.parse(res.data.configJSON)
+            let optionJSON = JSON.parse(res.data.optionJSON)
+            let that = this
+            WeixinJSBridge.invoke(
+              'getBrandWCPayRequest', {
+                'appId': optionJSON.appId,
+                'timeStamp': optionJSON.timeStamp,
+                'nonceStr': optionJSON.nonceStr,
+                'package': optionJSON.package,
+                'signType': optionJSON.signType,
+                'paySign': optionJSON.paySign
+              },
+              function (res) {
+                if (res.err_msg === 'get_brand_wcpay_request:ok') {
+                  that.payShow = true
+                  that.payRes = 'success'
+                } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
+                  // 支付取消
+                  that.$router.push({path: '/orders'})
+                } else if (res.err_msg === 'get_brand_wcpay_request:fail') {
+                  that.payShow = true
+                  that.payRes = 'error'
+                }
+              }
+            )
+          } else {
+            alert(res.msg)
+          }
+        })
       },
       _payDesc() {
         if (this.seller.status === '休息中') {
